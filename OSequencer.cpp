@@ -202,7 +202,7 @@ int	RunLoop(HINSTANCE hInstance, int argc, char** argv)
 				if ( msgHandler )
 					MLSetMessageHandler(pLink, msgHandler);
 
-				MLINK ml = MLOpenString(envLocal, "-linkmode launch -linkname \"MathKernel -mathlink\"", 0);
+				MLINK ml = MLOpenString(envLocal, "-linkmode launch -linkname \'MathKernel -mathlink\'", 0);
 				MLINK mlKeep = ml;
 				g_mlLinkTwo = ml;
 				if ( ml )
@@ -267,7 +267,7 @@ LABEL_EXCEED:
 							if ( pLink )
 							{
 								int nErr = MLError(pLink);
-								if ( nErr == 11 || nErr == 1 )
+								if ( nErr == MLECLOSED || nErr == MLEDEAD )
 								{
 									CloseLink(pLink);
 									pLink = NULL;
@@ -275,7 +275,7 @@ LABEL_EXCEED:
 								}
 							}
 							int nErr = MLError(ml);
-							if ( nErr == 11 || nErr == 1 )
+							if ( nErr == MLECLOSED || nErr == MLEDEAD )
 							{
 								CloseLink(ml);
 								ml = NULL;
@@ -415,7 +415,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //        create and display the main program window.
 //
 
-LRESULT __stdcall sub_4014F0(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
+LRESULT __stdcall OSeqWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
 	return DefWindowProcA(hWnd, Msg, wParam, lParam);
 }
@@ -427,7 +427,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    WNDCLASSA WndClass;
    WndClass.hInstance = hInstance;
    WndClass.style = 0;
-   WndClass.lpfnWndProc = sub_4014F0;
+   WndClass.lpfnWndProc = OSeqWndProc;
    WndClass.cbClsExtra = 0;
    WndClass.cbWndExtra = 0;
    WndClass.hIcon = LoadIconA(NULL, (LPCSTR)0x7f00);
@@ -444,7 +444,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
       return FALSE;
    }
 
-   ShowWindow(hWnd, nCmdShow);
+   //ShowWindow(hWnd, nCmdShow);
+   ShowWindow(hWnd, SW_HIDE);
    UpdateWindow(hWnd);
 
    return TRUE;

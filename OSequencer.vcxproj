@@ -131,7 +131,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <MinimumRequiredVersion>5.01</MinimumRequiredVersion>
       <AdditionalLibraryDirectories>MathLink;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ml32i2m.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ml32i3m.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -152,7 +152,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <MinimumRequiredVersion>5.01</MinimumRequiredVersion>
       <AdditionalLibraryDirectories>MathLink;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ml64i2m.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ml64i3m.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <Version>
       </Version>
     </Link>

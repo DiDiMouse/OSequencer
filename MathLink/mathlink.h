@@ -1,6 +1,6 @@
 /*************************************************************************
 
-        Copyright 1986 through 2009 by Wolfram Research Inc.
+        Copyright 1986 through 2010 by Wolfram Research Inc.
         All rights reserved
 
 *************************************************************************/
@@ -23,145 +23,149 @@
 #endif
 
 #if defined(__GNUC__)
-#	if defined(__GNUC_PATCHLEVEL__)
-#		define GCC_MATHLINK_VERSION (__GNUC__ * 10000 \
+#if defined(__GNUC_PATCHLEVEL__)
+#define GCC_MATHLINK_VERSION (__GNUC__ * 10000 \
 						+ __GNUC_MINOR__ * 100 \
 						+ __GNUC_PATCHLEVEL__)
-#	else
-#		define GCC_MATHLINK_VERSION (__GNUC__ * 10000 \
+#else
+#define GCC_MATHLINK_VERSION (__GNUC__ * 10000 \
 						+ __GNUC_MINOR__ * 100)
-#	endif
+#endif
 #endif
 
 #if WINDOWS_MATHLINK
-#	if defined(WIN64) || defined(__WIN64__) || defined(_WIN64)
-#		define WIN64_MATHLINK 1
-#		if( _M_IX86 || __i386 || __i386__ || i386)
-#			define I86_WIN32_MATHLINK 1
-#		endif
-#	elif defined(WIN32) || defined(__WIN32__) || defined(__NT__) || defined(_WIN32)
-#		define WIN32_MATHLINK 1
-#		if( _M_IX86 || __i386 || __i386__ || i386)
-#			define I86_WIN32_MATHLINK 1
-#		elif _M_ALPHA || __alpha || __alpha__ || alpha
-#			define ALPHA_WIN32_MATHLINK 1
-#		else
-#		endif
-#	else
-#		define WIN16_MATHLINK 1
-#	endif
+#if defined(WIN64) || defined(__WIN64__) || defined(_WIN64)
+#define WIN64_MATHLINK 1
+#if( _M_IX86 || __i386 || __i386__ || i386)
+#define I86_WIN32_MATHLINK 1
+#endif
+#elif defined(WIN32) || defined(__WIN32__) || defined(__NT__) || defined(_WIN32)
+#define WIN32_MATHLINK 1
+#if( _M_IX86 || __i386 || __i386__ || i386)
+#define I86_WIN32_MATHLINK 1
+#elif _M_ALPHA || __alpha || __alpha__ || alpha
+#define ALPHA_WIN32_MATHLINK 1
+#else
+#endif
+#else
+#define WIN16_MATHLINK 1
+#endif
 #elif UNIX_MATHLINK
-#	if (__sun || __sun__ || sun) && !defined(SUN_MATHLINK)
-#		define SUN_MATHLINK 1
-#		if __sparcv9 || __sparcv9__
-#			if __SUNPRO_C >= 0x590
-#				define STUDIO12_U64_SOLARIS_MATHLINK 1
-#			else
-#				define U64_SOLARIS_MATHLINK 1
-#			endif
-#		elif __SVR4 || __svr4__
-#			define U32_SOLARIS_MATHLINK 1
-#		else
-#			define SUNOS_MATHLINK 1
-#		endif
-#		if __sparc || __sparc__ || sparc
-#			define SPARC_SUN_MATHLINK 1
-#		elif __i386 || __i386__ || i386
-#			define I386_SOLARIS_MATHLINK 1
-#		elif __x86_64 || __x86_64__ || x86_64
-#			define X86_64_SOLARIS_MATHLINK 1
-#		else
+#if (__sun || __sun__ || sun) && !defined(SUN_MATHLINK)
+#define SUN_MATHLINK 1
+#if __sparcv9 || __sparcv9__
+#if __SUNPRO_C >= 0x590
+#define STUDIO12_U64_SOLARIS_MATHLINK 1
+#else
+#define U64_SOLARIS_MATHLINK 1
+#endif
+#elif __SVR4 || __svr4__
+#define U32_SOLARIS_MATHLINK 1
+#else
+#define SUNOS_MATHLINK 1
+#endif
+#if __sparc || __sparc__ || sparc
+#define SPARC_SUN_MATHLINK 1
+#elif __i386 || __i386__ || i386
+#define I386_SOLARIS_MATHLINK 1
+#elif __x86_64 || __x86_64__ || x86_64
+#define X86_64_SOLARIS_MATHLINK 1
+#else
 			unknown platform
-#		endif
-#	elif (__MACH || __MACH__ || MACH) && !defined(DARWIN_MATHLINK)
-#		define DARWIN_MATHLINK 1
-#		if __ppc || __ppc__ || ppc
-#			define PPC_DARWIN_MATHLINK 1
-#		elif __ppc64 || __ppc64__ || ppc64
-#			define PPC64_DARWIN_MATHLINK 1
-#		elif __i386 || __i386__ || i386
-#			define X86_DARWIN_MATHLINK 1
-#		elif __x86_64 || __x86_64__ || x86_64
-#			define X86_64_DARWIN_MATHLINK 1
-#		else
+#endif
+#elif (__MACH || __MACH__ || MACH) && !defined(DARWIN_MATHLINK)
+#define DARWIN_MATHLINK 1
+#if __ppc || __ppc__ || ppc
+#define PPC_DARWIN_MATHLINK 1
+#elif __ppc64 || __ppc64__ || ppc64
+#define PPC64_DARWIN_MATHLINK 1
+#elif __i386 || __i386__ || i386
+#define X86_DARWIN_MATHLINK 1
+#elif __x86_64 || __x86_64__ || x86_64
+#define X86_64_DARWIN_MATHLINK 1
+#elif __arm__
+#define ARM_DARWIN_MATHLINK 1
+#else
 			not yet implemented
-#		endif
+#endif
 
-#		if __DARWIN_UNIX03
-#			define DARWIN_MATHLINK_UNIX03 1
-#		endif /* __DARWIN_UNIX03 */
-#	elif (__linux || __linux__ || linux) && !defined(LINUX_MATHLINK)
-#		define LINUX_MATHLINK 1
-#		if __x86_64 || __x86_64__ || x86_64
-#			define X86_64_LINUX_MATHLINK 1
-#		elif __ia64 || __ia64__ || ia64
-#			define IA64_LINUX_MATHLINK 1
-#		elif __i386 || __i386__ || i386
-#			define I86_LINUX_MATHLINK 1
-#		elif __PPC || __PPC__ || PPC
-#			define PPC_LINUX_MATHLINK 1
-#		elif __alpha || __alpha__ || alpha
-#			define AXP_LINUX_MATHLINK 1
-#		elif __arm || __arm__ || arm
-#			define ARM_LINUX_MATHLINK 1
-#		else
+#if __DARWIN_UNIX03
+#define DARWIN_MATHLINK_UNIX03 1
+#endif /* __DARWIN_UNIX03 */
+#elif (__linux || __linux__ || linux) && !defined(LINUX_MATHLINK)
+#define LINUX_MATHLINK 1
+#if __x86_64 || __x86_64__ || x86_64
+#define X86_64_LINUX_MATHLINK 1
+#elif __ia64 || __ia64__ || ia64
+#define IA64_LINUX_MATHLINK 1
+#elif __i386 || __i386__ || i386
+#define I86_LINUX_MATHLINK 1
+#elif __PPC || __PPC__ || PPC
+#define PPC_LINUX_MATHLINK 1
+#elif __alpha || __alpha__ || alpha
+#define AXP_LINUX_MATHLINK 1
+#elif __arm || __arm__ || arm
+#define ARM_LINUX_MATHLINK 1
+#else
 			not yet implemented
-#		endif
-#	elif (__osf || __osf__ || osf || OSF1) && !defined(DIGITAL_MATHLINK)
-#		define DIGITAL_MATHLINK 1
-#		if __alpha || __alpha__ || alpha
-#			define ALPHA_DIGITAL_MATHLINK 1
-#		else
+#endif
+#elif (__osf || __osf__ || osf || OSF1) && !defined(DIGITAL_MATHLINK)
+#define DIGITAL_MATHLINK 1
+#if __alpha || __alpha__ || alpha
+#define ALPHA_DIGITAL_MATHLINK 1
+#else
 			unknown platform
-#		endif
-#	elif (_AIX || _IBMR2 || __xlC__) && !defined(AIX_MATHLINK)
-#		define AIX_MATHLINK 1
-#		if __64BIT__
-#			define A64_AIX_MATHLINK 1
-#		endif
-#	elif (__sgi || __sgi__ || sgi || mips) && !defined(IRIX_MATHLINK)
-#		define IRIX_MATHLINK 1
-#		if _MIPS_SZLONG == 32
-#			define N32_IRIX_MATHLINK 1
-#		elif _MIPS_SZLONG == 64
-#			define M64_IRIX_MATHLINK 1
-#		else
+#endif
+#elif (_AIX || _IBMR2 || __xlC__) && !defined(AIX_MATHLINK)
+#define AIX_MATHLINK 1
+#if __64BIT__
+#define A64_AIX_MATHLINK 1
+#endif
+#elif (__sgi || __sgi__ || sgi || mips) && !defined(IRIX_MATHLINK)
+#define IRIX_MATHLINK 1
+#if _MIPS_SZLONG == 32
+#define N32_IRIX_MATHLINK 1
+#elif _MIPS_SZLONG == 64
+#define M64_IRIX_MATHLINK 1
+#else
 			not yet implemented
-#		endif
-#	elif (hpux || __hpux) && !defined(HPUX_MATHLINK)
-#		define HPUX_MATHLINK 1
-#		if __LP64__
-#			define LP64_HPUX_MATHLINK 1
-#		endif
-#	elif (M_I386 || _SCO_DS || SCO) && !defined(SCO_MATHLINK)
-#		define SCO_MATHLINK 1
-#	elif (__NetBSD__) && !defined(NETBSD_MATHLINK)
-#		define NETBSD_MATHLINK 1
-#	elif (__FreeBSD__) && !defined(FREEBSD_MATHLINK)
-#		define FREEBSD_MATHLINK 1
-#	elif (bsdi || __bsdi__) && !defined(BSDI_MATHLINK)
-#		define BSDI_MATHLINK 1
-#	else
-#	endif
+#endif
+#elif (hpux || __hpux) && !defined(HPUX_MATHLINK)
+#define HPUX_MATHLINK 1
+#if __LP64__
+#define LP64_HPUX_MATHLINK 1
+#endif
+#elif (M_I386 || _SCO_DS || SCO) && !defined(SCO_MATHLINK)
+#define SCO_MATHLINK 1
+#elif (__NetBSD__) && !defined(NETBSD_MATHLINK)
+#define NETBSD_MATHLINK 1
+#elif (__FreeBSD__) && !defined(FREEBSD_MATHLINK)
+#define FREEBSD_MATHLINK 1
+#elif (bsdi || __bsdi__) && !defined(BSDI_MATHLINK)
+#define BSDI_MATHLINK 1
+#else
+#endif
 #endif
 
 
 
 #ifndef NO_GLOBAL_DATA
-#	define NO_GLOBAL_DATA 0
+#define NO_GLOBAL_DATA 0
 #endif
 
-#if WINDOWS_MATHLINK || __i386 || __i386__ || i386 || _M_IX86 || __x86_64 || __x86_64__ || x86_64 || __ia64 || __ia64__ || ia64 ||  __alpha || __alpha__ || alpha
-#	define LITTLEENDIAN_NUMERIC_TYPES 1
+#if WINDOWS_MATHLINK || __i386 || __i386__ || i386 || _M_IX86 || __x86_64 || __x86_64__ || x86_64 || __ia64 || __ia64__ || ia64 ||  __alpha || __alpha__ || alpha || __arm__
+#define LITTLEENDIAN_NUMERIC_TYPES 1
 #else
-#	define BIGENDIAN_NUMERIC_TYPES 1
+#define BIGENDIAN_NUMERIC_TYPES 1
 #endif
 
 #endif /* _MLPLATFM_H */
 
+
+
 #ifndef MLVERSION
         /* APPIDSERV */
-#       define MLVERSION 4
+#define MLVERSION 4
 #endif
 
 #if !OLD_VERSIONING
@@ -248,9 +252,9 @@
  * MathLink Developer's Guide for each platform.
  */
 
-#define MLREVISION 20
-#define MLMATHVERSION 7.0.1
-#define MLCREATIONID 1213613
+#define MLREVISION 21
+#define MLMATHVERSION 8.0.0
+#define MLCREATIONID 1802847
 
 #define MLAPI1REVISION 1   /* the first revision to support interface 1 */
 #define MLAPI2REVISION 6   /* the first revision to support interface 2 */
@@ -259,8 +263,8 @@
 
 
 #ifndef MLINTERFACE
-#       define MLINTERFACE 3
-#       define MLAPIREVISION MLAPI3REVISION
+#define MLINTERFACE 3
+#define MLAPIREVISION MLAPI3REVISION
 
 
 
@@ -412,17 +416,17 @@
                  *
                  */
 #else
-#       if MLINTERFACE == 1
-#               define MLAPIREVISION MLAPI1REVISION
-#       elif MLINTERFACE == 2
-#               define MLAPIREVISION MLAPI2REVISION
-#	elif MLINTERFACE == 3
-#		define MLAPIREVISION MLAPI3REVISION
-#	elif MLINTERFACE == 4
-#		define MLAPIREVISION MLAPI4REVISION
-#       else
+#if MLINTERFACE == 1
+#define MLAPIREVISION MLAPI1REVISION
+#elif MLINTERFACE == 2
+#define MLAPIREVISION MLAPI2REVISION
+#elif MLINTERFACE == 3
+#define MLAPIREVISION MLAPI3REVISION
+#elif MLINTERFACE == 4
+#define MLAPIREVISION MLAPI4REVISION
+#else
 /* syntax error */ )
-#       endif
+#endif
 #endif
 
 
@@ -435,19 +439,19 @@
  */
 
 #ifndef MLOLDDEFINITION
-#       if WINDOWS_MATHLINK
-#               if MLINTERFACE == 1
-#                       define MLOLDDEFINITION MLAPI1REVISION
-#               elif MLINTERFACE == 2
-#                       define MLOLDDEFINITION MLAPI2REVISION
-#		elif MLINTERFACE == 3
-#			define MLOLDDEFINITION MLAPI2REVISION
-#               else
+#if WINDOWS_MATHLINK
+#if MLINTERFACE == 1
+#define MLOLDDEFINITION MLAPI1REVISION
+#elif MLINTERFACE == 2
+#define MLOLDDEFINITION MLAPI2REVISION
+#elif MLINTERFACE == 3
+#define MLOLDDEFINITION MLAPI2REVISION
+#else
 /* syntax error */ )
-#               endif
-#       else
-#               define MLOLDDEFINITION MLAPI1REVISION
-#       endif
+#endif
+#else
+#define MLOLDDEFINITION MLAPI1REVISION
+#endif
 #endif
 
 
@@ -459,41 +463,48 @@
 
 #endif /* _MLVERS_H */
 
+
+
 #ifndef ML_EXTERN_C
 
 #if defined(__cplusplus)
-#	define ML_C "C"
-#	define ML_EXTERN_C extern "C" {
-#	define ML_END_EXTERN_C }
+#define ML_C "C"
+#define ML_EXTERN_C extern "C" {
+#define ML_END_EXTERN_C }
 #else
-#	define ML_C
-#	define ML_EXTERN_C
-#	define ML_END_EXTERN_C
+#define ML_C
+#define ML_EXTERN_C
+#define ML_END_EXTERN_C
 #endif
 
 #endif
+
+
+
 
 
 
 #if WINDOWS_MATHLINK && (MPREP_REVISION || !defined(APIENTRY) || !defined(FAR))
 
 #if defined(WIN32_LEAN_AND_MEAN) && defined(WIN32_EXTRA_LEAN)
-#	include <windows.h>
+#include <windows.h>
 #elif defined( WIN32_LEAN_AND_MEAN)
-#	define WIN32_EXTRA_LEAN
-#	include <windows.h>
-#	undef WIN32_EXTRA_LEAN
+#define WIN32_EXTRA_LEAN
+#include <windows.h>
+#undef WIN32_EXTRA_LEAN
 #elif defined( WIN32_EXTRA_LEAN)
-#	define WIN32_LEAN_AND_MEAN
-#	include <windows.h>
-#	undef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#undef WIN32_LEAN_AND_MEAN
 #else
-#	define WIN32_EXTRA_LEAN
-#	define WIN32_LEAN_AND_MEAN
-#	include <windows.h>
-#	undef WIN32_EXTRA_LEAN
-#	undef WIN32_LEAN_AND_MEAN
+#define WIN32_EXTRA_LEAN
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#undef WIN32_EXTRA_LEAN
+#undef WIN32_LEAN_AND_MEAN
 #endif
+
+
 
 #endif
 
@@ -502,33 +513,40 @@
 #define _MLDEVICE_H
 
 
+
 #ifndef P
 
-#  ifndef MLPROTOTYPES
-#    define MLPROTOTYPES 1
-#  endif
 
-#  if MLPROTOTYPES || __STDC__ || defined(__cplusplus) || ! UNIX_MATHLINK
-#    define P(s) s
-#	 undef MLPROTOTYPES
-#	 define MLPROTOTYPES 1
-#  else
-#    define P(s) ()
-#	 undef MLPROTOTYPES
-#	 define MLPROTOTYPES 0
-#  endif
+#ifndef MLPROTOTYPES
+#define MLPROTOTYPES 1
 #endif
+
+#if MLPROTOTYPES || __STDC__ || defined(__cplusplus) || ! UNIX_MATHLINK
+#define P(s) s
+#undef MLPROTOTYPES
+#define MLPROTOTYPES 1
+#else
+#define P(s) ()
+#undef MLPROTOTYPES
+#define MLPROTOTYPES 0
+#endif
+#endif
+
+
+
 #ifndef _MLFAR_H
 #define _MLFAR_H
 
 #ifndef FAR
 
+
 #if WINDOWS_MATHLINK
-#	ifndef FAR
+
+#ifndef FAR
 /* syntax error */ )
-#	endif
+#endif
 #else
-#	define FAR
+#define FAR
 #endif
 
 
@@ -537,21 +555,28 @@
 /* //rename this file mlfarhuge.h */
 
 #ifndef MLHUGE
-#  if WINDOWS_MATHLINK && !(WIN32_MATHLINK || WIN64_MATHLINK)
-#    define MLHUGE huge
-#  else
-#    define MLHUGE
-#  endif
+#if WINDOWS_MATHLINK && !(WIN32_MATHLINK || WIN64_MATHLINK)
+#define MLHUGE huge
+#else
+#define MLHUGE
+#endif
 #endif
 
 #endif /* _MLFAR_H */
+
+
 
 #ifndef _MLTYPES_H
 #define _MLTYPES_H
 
 
+
+
+
+
 #ifndef _MLBASICTYPES_H
 #define _MLBASICTYPES_H
+
 
 
 
@@ -564,6 +589,8 @@
 #endif
 
 #endif /* MLINT64_H */
+
+
 
 
 #define ML_SMALLEST_SIGNED_64BIT        -9223372036854775807L - 1
@@ -608,55 +635,58 @@ typedef wint64 mluint64;
 #endif /* _MLBASICTYPES_H */
 
 
+
+
 #if WINDOWS_MATHLINK
-#	ifndef	APIENTRY
-#		define APIENTRY far pascal
-#	endif
-#	ifndef CALLBACK
-#		define CALLBACK APIENTRY
-#	endif
-#	if (WIN32_MATHLINK || WIN64_MATHLINK)
+
+#ifndef	APIENTRY
+#define APIENTRY far pascal
+#endif
+#ifndef CALLBACK
+#define CALLBACK APIENTRY
+#endif
+#if (WIN32_MATHLINK || WIN64_MATHLINK)
  /* try this #define MLEXPORT __declspec(dllexport) */
-#		define MLEXPORT
-#	else
-#		define MLEXPORT __export
-#	endif
-#	define MLCB APIENTRY MLEXPORT
-#	define MLAPI APIENTRY
+#define MLEXPORT
+#else
+#define MLEXPORT __export
+#endif
+#define MLCB APIENTRY MLEXPORT
+#define MLAPI APIENTRY
 
 #else
-#	define MLCB
-#	define MLAPI
-#	define MLEXPORT
+#define MLCB
+#define MLAPI
+#define MLEXPORT
 #endif
 
 #define MLAPI_ MLAPI
 
 
 #ifndef MLDEFN
-#	define MLDEFN( rtype, name, params) extern rtype MLAPI MLEXPORT name params
+#define MLDEFN( rtype, name, params) extern rtype MLAPI MLEXPORT name params
 #endif
 #ifndef MLDECL
-#	define MLDECL( rtype, name, params) extern rtype MLAPI name P(params)
+#define MLDECL( rtype, name, params) extern rtype MLAPI name P(params)
 #endif
 
 #ifndef ML_DEFN
-#	define ML_DEFN( rtype, name, params) extern rtype MLAPI_ MLEXPORT name params
+#define ML_DEFN( rtype, name, params) extern rtype MLAPI_ MLEXPORT name params
 #endif
 #ifndef ML_DECL
-#	define ML_DECL( rtype, name, params) extern ML_C rtype MLAPI_ name P(params)
+#define ML_DECL( rtype, name, params) extern ML_C rtype MLAPI_ name P(params)
 #endif
 
 
 
 #ifndef MLCBPROC
-#	define MLCBPROC( rtype, name, params) typedef rtype (MLCB * name) P(params)
+#define MLCBPROC( rtype, name, params) typedef rtype (MLCB * name) P(params)
 #endif
 #ifndef MLCBDECL
-#	define MLCBDECL( rtype, name, params) extern rtype MLCB name P(params)
+#define MLCBDECL( rtype, name, params) extern rtype MLCB name P(params)
 #endif
 #ifndef MLCBDEFN
-#	define MLCBDEFN( rtype, name, params) extern rtype MLCB name params
+#define MLCBDEFN( rtype, name, params) extern rtype MLCB name params
 #endif
 
 
@@ -664,13 +694,13 @@ typedef wint64 mluint64;
 
 /* move into mlalert.h */
 #ifndef MLDPROC
-#	define MLDPROC MLCBPROC
+#define MLDPROC MLCBPROC
 #endif
 #ifndef MLDDECL
-#	define MLDDECL MLCBDECL
+#define MLDDECL MLCBDECL
 #endif
 #ifndef MLDDEFN
-#	define MLDDEFN MLCBDEFN
+#define MLDDEFN MLCBDEFN
 #endif
 
 
@@ -678,110 +708,110 @@ typedef wint64 mluint64;
 
 /* move into ml3state.h or mlstrenv.h */
 #ifndef MLTPROC
-#	define MLTPROC MLCBPROC
+#define MLTPROC MLCBPROC
 #endif
 #ifndef MLTDECL
-#	define MLTDECL MLCBDECL
+#define MLTDECL MLCBDECL
 #endif
 #ifndef MLTDEFN
-#	define MLTDEFN MLCBDEFN
+#define MLTDEFN MLCBDEFN
 #endif
 
 
 /* move into mlnumenv.h */
 #ifndef MLNPROC
-#	define MLNPROC MLCBPROC
+#define MLNPROC MLCBPROC
 #endif
 #ifndef MLNDECL
-#	define MLNDECL MLCBDECL
+#define MLNDECL MLCBDECL
 #endif
 #ifndef MLNDEFN
-#	define MLNDEFN MLCBDEFN
+#define MLNDEFN MLCBDEFN
 #endif
 
 
 /* move into mlalloc.h */
 #ifndef MLAPROC
-#	define MLAPROC MLCBPROC
+#define MLAPROC MLCBPROC
 #endif
 #ifndef MLADECL
-#	define MLADECL MLCBDECL
+#define MLADECL MLCBDECL
 #endif
 #ifndef MLADEFN
-#	define MLADEFN MLCBDEFN
+#define MLADEFN MLCBDEFN
 #endif
 #ifndef MLFPROC
-#	define MLFPROC MLCBPROC
+#define MLFPROC MLCBPROC
 #endif
 #ifndef MLFDECL
-#	define MLFDECL MLCBDECL
+#define MLFDECL MLCBDECL
 #endif
 #ifndef MLFDEFN
-#	define MLFDEFN MLCBDEFN
+#define MLFDEFN MLCBDEFN
 #endif
 #ifndef MLRAPROC
-#	define MLRAPROC MLCBPROC
+#define MLRAPROC MLCBPROC
 #endif
 #ifndef MLRADECL
-#	define MLRADECL MLCBDECL
+#define MLRADECL MLCBDECL
 #endif
 #ifndef MLRADEFN
-#	define MLRADEFN MLCBDEFN
+#define MLRADEFN MLCBDEFN
 #endif
 
 
 /* move into mlstddev.h */
 #ifndef MLYPROC
-#	define MLYPROC MLCBPROC
+#define MLYPROC MLCBPROC
 #endif
 #ifndef MLYDECL
-#	define MLYDECL MLCBDECL
+#define MLYDECL MLCBDECL
 #endif
 #ifndef MLYDEFN
-#	define MLYDEFN MLCBDEFN
+#define MLYDEFN MLCBDEFN
 #endif
 #ifndef MLMPROC
-#	define MLMPROC MLCBPROC
+#define MLMPROC MLCBPROC
 #endif
 #ifndef MLMDECL
-#	define MLMDECL MLCBDECL
+#define MLMDECL MLCBDECL
 #endif
 #ifndef MLMDEFN
-#	define MLMDEFN MLCBDEFN
+#define MLMDEFN MLCBDEFN
 #endif
 
 
 /* move into mlmake.h */
 #ifndef MLUPROC
-#	define MLUPROC MLCBPROC
+#define MLUPROC MLCBPROC
 #endif
 #ifndef MLUDECL
-#	define MLUDECL MLCBDECL
+#define MLUDECL MLCBDECL
 #endif
 #ifndef MLUDEFN
-#	define MLUDEFN MLCBDEFN
+#define MLUDEFN MLCBDEFN
 #endif
 
 
 /* move into mlmake.h */
 #ifndef MLBPROC
-#	define MLBPROC MLCBPROC
+#define MLBPROC MLCBPROC
 #endif
 #ifndef MLBDECL
-#	define MLBDECL MLCBDECL
+#define MLBDECL MLCBDECL
 #endif
 #ifndef MLBDEFN
-#	define MLBDEFN MLCBDEFN
+#define MLBDEFN MLCBDEFN
 #endif
 
 #ifndef MLDMPROC
-#	define MLDMPROC MLCBPROC
+#define MLDMPROC MLCBPROC
 #endif
 #ifndef MLDMDECL
-#	define MLDMDECL MLCBDECL
+#define MLDMDECL MLCBDECL
 #endif
 #ifndef MLDMDEFN
-#	define MLDMDEFN MLCBDEFN
+#define MLDMDEFN MLCBDEFN
 #endif
 
 
@@ -822,11 +852,11 @@ typedef ulong_ct       FAR * ulongp_ct;
 
 
 #ifndef MLCONST
-#	if MLPROTOTYPES
-#		define MLCONST const
-#	else
-#		define MLCONST
-#	endif
+#if MLPROTOTYPES
+#define MLCONST const
+#else
+#define MLCONST
+#endif
 #endif
 
 typedef MLCONST unsigned short FAR * kushortp_ct;
@@ -845,18 +875,18 @@ typedef void FAR * MLPointer;
 #ifndef __MLENV__
 	typedef struct ml_environment FAR *MLENV;
 	typedef MLENV MLEnvironment;
-#	define __MLENV__
+#define __MLENV__
 #endif
 
 #ifndef __MLINK__
 	typedef struct MLink FAR *MLINK;
-#	define __MLINK__
+#define __MLINK__
 #endif
 
 #ifndef __MLMARK__
 	typedef struct MLinkMark FAR *MLMARK;
 	typedef MLMARK MLINKMark;
-#	define __MLMARK__
+#define __MLMARK__
 #endif
 
 #ifndef __mlapi_token__
@@ -906,13 +936,16 @@ ML_END_EXTERN_C
 #endif /* _MLTYPES_H */
 
 
+
+
 #if WINDOWS_MATHLINK
-#	ifndef	APIENTRY
-#		define	APIENTRY far pascal
-#	endif
-#	define MLBN APIENTRY /* bottleneck function: upper layer calls lower layer */
+
+#ifndef	APIENTRY
+#define	APIENTRY far pascal
+#endif
+#define MLBN APIENTRY /* bottleneck function: upper layer calls lower layer */
 #else
-#	define MLBN
+#define MLBN
 #endif
 
 #define BN MLBN
@@ -976,8 +1009,12 @@ ML_END_EXTERN_C
 #endif /* _MLDEVICE_H */
 
 
+
+
 #ifndef _MLAPI_H
 #define _MLAPI_H
+
+
 
 
 ML_EXTERN_C
@@ -985,7 +1022,11 @@ ML_EXTERN_C
 #ifndef _MLALLOC_H
 #define _MLALLOC_H
 
+
+
+
 /* #include "mlcfm.h" */
+
 
 #if MLINTERFACE >= 3
 #if WIN64_MATHLINK
@@ -1036,6 +1077,8 @@ MLDECL( __MLProcPtr__, MLDeallocatorCast, ( MLDeallocatorProcPtr f));
 
 ML_END_EXTERN_C
 
+
+
 typedef MLAllocatorUPP MLAllocator;
 typedef MLAllocator FAR * MLAllocatorp;
 #define MLCallAllocator CallMLAllocatorProc
@@ -1052,12 +1095,21 @@ typedef MLDeallocator FAR * MLDeallocatorp;
 #endif /* _MLAPI_H */
 
 
+
+
 #ifndef _MLNTYPES_H
 #define _MLNTYPES_H
 
 
+
+
+
 #ifndef _MLNUMENV_H
 #define _MLNUMENV_H
+
+
+
+
 
 
 /* mlne__s2 must convert empty strings to zero */
@@ -1191,6 +1243,9 @@ ML_END_EXTERN_C
 
 
 #endif /* _MLNUMENV_H */
+
+
+
 
 #ifndef MLINTERFACE
 /* syntax error */ )
@@ -1538,6 +1593,23 @@ MLBRIARD_MLLONGDOUBLE */
 #define MLBASENJI_MLDOUBLE       MLTK_LITTLEENDIAN_IEEE754_DOUBLE
 #define MLBASENJI_MLLONGDOUBLE   MLTK_LITTLEENDIAN_128BIT_DOUBLE
 
+/********************  SHARPEI  ****************************/
+#define MLSHARPEI_NUMERICS_ID    "sharpei"
+#define MLSHARPEI_CSHORT         MLTK_16BIT_SIGNED_2sCOMPLEMENT_LITTLEENDIAN_INTEGER
+#define MLSHARPEI_CINT           MLTK_32BIT_SIGNED_2sCOMPLEMENT_LITTLEENDIAN_INTEGER
+#define MLSHARPEI_CLONG          MLTK_32BIT_SIGNED_2sCOMPLEMENT_LITTLEENDIAN_INTEGER
+#define MLSHARPEI_CINT64         MLTK_64BIT_LITTLEENDIAN_STRUCTURE
+#define MLSHARPEI_CFLOAT         MLTK_LITTLEENDIAN_IEEE754_SINGLE
+#define MLSHARPEI_CDOUBLE        MLTK_LITTLEENDIAN_IEEE754_DOUBLE
+#define MLSHARPEI_CLONGDOUBLE    MLTK_LITTLEENDIAN_128BIT_DOUBLE
+#define MLSHARPEI_MLSHORT        MLTK_16BIT_SIGNED_2sCOMPLEMENT_LITTLEENDIAN_INTEGER
+#define MLSHARPEI_MLINT          MLTK_32BIT_SIGNED_2sCOMPLEMENT_LITTLEENDIAN_INTEGER
+#define MLSHARPEI_MLLONG         MLTK_32BIT_SIGNED_2sCOMPLEMENT_LITTLEENDIAN_INTEGER
+#define MLSHARPEI_MLINT64        MLTK_64BIT_LITTLEENDIAN_STRUCTURE
+#define MLSHARPEI_MLFLOAT        MLTK_LITTLEENDIAN_IEEE754_SINGLE
+#define MLSHARPEI_MLDOUBLE       MLTK_LITTLEENDIAN_IEEE754_DOUBLE
+#define MLSHARPEI_MLLONGDOUBLE   MLTK_LITTLEENDIAN_128BIT_DOUBLE
+
 /********************  GREATDANE  ****************************/
 #define MLGREATDANE_NUMERICS_ID    "greatdane"
 #define MLGREATDANE_CSHORT         MLTK_16BIT_SIGNED_2sCOMPLEMENT_LITTLEENDIAN_INTEGER
@@ -1841,9 +1913,9 @@ MLBRIARD_MLLONGDOUBLE */
 
 
 #if WINDOWS_MATHLINK
-#	if MLINTERFACE > 1
-#		define NEW_WIN32_NUMENV 1
-#	endif
+#if MLINTERFACE > 1
+#define NEW_WIN32_NUMENV 1
+#endif
 #endif
 
 
@@ -1856,716 +1928,735 @@ MLBRIARD_MLLONGDOUBLE */
 
 #if SUN_MATHLINK
 
-#	if __sparc || __sparc__ || sparc
-#		include <sys/types.h>
+#if __sparc || __sparc__ || sparc
+#include <sys/types.h>
 
-#		if __SUNPRO_C >= 0x301 || __SUNPRO_CC >= 0x301
-#			if defined(_ILP32)
-#				define MATHLINK_NUMERICS_ENVIRONMENT_ID MLMASTIFF_NUMERICS_ID
+#if __SUNPRO_C >= 0x301 || __SUNPRO_CC >= 0x301
+#if defined(_ILP32)
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID MLMASTIFF_NUMERICS_ID
 
-#				define MLTK_CSHORT       MLMASTIFF_CSHORT
-#				define MLTK_CINT         MLMASTIFF_CINT
-#				define MLTK_CLONG        MLMASTIFF_CLONG
-#				define MLTK_CINT64       MLMASTIFF_CINT64
-#				define MLTK_CFLOAT       MLMASTIFF_CFLOAT
-#				define MLTK_CDOUBLE      MLMASTIFF_CDOUBLE
-#				define MLTK_CLONGDOUBLE  MLMASTIFF_CLONGDOUBLE
+#define MLTK_CSHORT       MLMASTIFF_CSHORT
+#define MLTK_CINT         MLMASTIFF_CINT
+#define MLTK_CLONG        MLMASTIFF_CLONG
+#define MLTK_CINT64       MLMASTIFF_CINT64
+#define MLTK_CFLOAT       MLMASTIFF_CFLOAT
+#define MLTK_CDOUBLE      MLMASTIFF_CDOUBLE
+#define MLTK_CLONGDOUBLE  MLMASTIFF_CLONGDOUBLE
 
-#				define MLTK_MLSHORT      MLMASTIFF_MLSHORT
-#				define MLTK_MLINT        MLMASTIFF_MLINT
-#				define MLTK_MLLONG       MLMASTIFF_MLLONG
-#				define MLTK_MLINT64      MLMASTIFF_MLINT64
-#				define MLTK_MLFLOAT      MLMASTIFF_MLFLOAT
-#				define MLTK_MLDOUBLE     MLMASTIFF_MLDOUBLE
-#				define MLTK_MLLONGDOUBLE MLMASTIFF_MLLONGDOUBLE
+#define MLTK_MLSHORT      MLMASTIFF_MLSHORT
+#define MLTK_MLINT        MLMASTIFF_MLINT
+#define MLTK_MLLONG       MLMASTIFF_MLLONG
+#define MLTK_MLINT64      MLMASTIFF_MLINT64
+#define MLTK_MLFLOAT      MLMASTIFF_MLFLOAT
+#define MLTK_MLDOUBLE     MLMASTIFF_MLDOUBLE
+#define MLTK_MLLONGDOUBLE MLMASTIFF_MLLONGDOUBLE
 
-#			elif defined(_LP64)
-#				define MATHLINK_NUMERICS_ENVIRONMENT_ID MLJAPANESECHIN_NUMERICS_ID
+#elif defined(_LP64)
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID MLJAPANESECHIN_NUMERICS_ID
 
-#				define MLTK_CSHORT       MLJAPANESECHIN_CSHORT
-#				define MLTK_CINT         MLJAPANESECHIN_CINT
-#				define MLTK_CLONG        MLJAPANESECHIN_CLONG
-#				define MLTK_CINT64       MLJAPANESECHIN_CINT64
-#				define MLTK_CFLOAT       MLJAPANESECHIN_CFLOAT
-#				define MLTK_CDOUBLE      MLJAPANESECHIN_CDOUBLE
-#				define MLTK_CLONGDOUBLE  MLJAPANESECHIN_CLONGDOUBLE
+#define MLTK_CSHORT       MLJAPANESECHIN_CSHORT
+#define MLTK_CINT         MLJAPANESECHIN_CINT
+#define MLTK_CLONG        MLJAPANESECHIN_CLONG
+#define MLTK_CINT64       MLJAPANESECHIN_CINT64
+#define MLTK_CFLOAT       MLJAPANESECHIN_CFLOAT
+#define MLTK_CDOUBLE      MLJAPANESECHIN_CDOUBLE
+#define MLTK_CLONGDOUBLE  MLJAPANESECHIN_CLONGDOUBLE
 
-#				define MLTK_MLSHORT      MLJAPANESECHIN_MLSHORT
-#				define MLTK_MLINT        MLJAPANESECHIN_MLINT
-#				define MLTK_MLLONG       MLJAPANESECHIN_MLLONG
-#				define MLTK_MLINT64      MLJAPANESECHIN_MLINT64
-#				define MLTK_MLFLOAT      MLJAPANESECHIN_MLFLOAT
-#				define MLTK_MLDOUBLE     MLJAPANESECHIN_MLDOUBLE
-#				define MLTK_MLLONGDOUBLE MLJAPANESECHIN_MLLONGDOUBLE
+#define MLTK_MLSHORT      MLJAPANESECHIN_MLSHORT
+#define MLTK_MLINT        MLJAPANESECHIN_MLINT
+#define MLTK_MLLONG       MLJAPANESECHIN_MLLONG
+#define MLTK_MLINT64      MLJAPANESECHIN_MLINT64
+#define MLTK_MLFLOAT      MLJAPANESECHIN_MLFLOAT
+#define MLTK_MLDOUBLE     MLJAPANESECHIN_MLDOUBLE
+#define MLTK_MLLONGDOUBLE MLJAPANESECHIN_MLLONGDOUBLE
 
-#			endif /* _ILP32 || _LP64 */
-#		elif defined(__GNUC__) || defined(__GNUG__)
-#			if defined(_ILP32)
-#				define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLKEESHOND_NUMERICS_ID
+#endif /* _ILP32 || _LP64 */
+#elif defined(__GNUC__) || defined(__GNUG__)
+#if defined(_ILP32)
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLKEESHOND_NUMERICS_ID
 
-#				define MLTK_CSHORT        MLKEESHOND_CSHORT
-#				define MLTK_CINT          MLKEESHOND_CINT
-#				define MLTK_CLONG         MLKEESHOND_CLONG
-#				define MLTK_CINT64        MLKEESHOND_CINT64
-#				define MLTK_CFLOAT        MLKEESHOND_CFLOAT
-#				define MLTK_CDOUBLE       MLKEESHOND_CDOUBLE
-#				define MLTK_CLONGDOULBE   MLKEESHOND_CLONGDOUBLE
+#define MLTK_CSHORT        MLKEESHOND_CSHORT
+#define MLTK_CINT          MLKEESHOND_CINT
+#define MLTK_CLONG         MLKEESHOND_CLONG
+#define MLTK_CINT64        MLKEESHOND_CINT64
+#define MLTK_CFLOAT        MLKEESHOND_CFLOAT
+#define MLTK_CDOUBLE       MLKEESHOND_CDOUBLE
+#define MLTK_CLONGDOULBE   MLKEESHOND_CLONGDOUBLE
 
-#				define MLTK_MLSHORT       MLKEESHOND_MLSHORT
-#				define MLTK_MLINT         MLKEESHOND_MLINT
-#				define MLTK_MLLONG        MLKEESHOND_MLLONG
-#				define MLTK_MLFLOAT       MLKEESHOND_MLFLOAT
-#				define MLTK_MLDOUBLE      MLKEESHOND_MLDOUBLE
-#				define MLTK_MLLONGDOUBLE  MLKEESHOND_MLLONGDOUBLE
-#			elif defined(_LP64)
-#				define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLKOMONDOR_NUMERICS_ID
+#define MLTK_MLSHORT       MLKEESHOND_MLSHORT
+#define MLTK_MLINT         MLKEESHOND_MLINT
+#define MLTK_MLLONG        MLKEESHOND_MLLONG
+#define MLTK_MLFLOAT       MLKEESHOND_MLFLOAT
+#define MLTK_MLDOUBLE      MLKEESHOND_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLKEESHOND_MLLONGDOUBLE
+#elif defined(_LP64)
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLKOMONDOR_NUMERICS_ID
 
-#				define MLTK_CSHORT        MLKOMONDOR_CSHORT
-#				define MLTK_CINT          MLKOMONDOR_CINT
-#				define MLTK_CLONG         MLKOMONDOR_CLONG
-#				define MLTK_CINT64        MLKOMONDOR_CINT64
-#				define MLTK_CFLOAT        MLKOMONDOR_CFLOAT
-#				define MLTK_CDOUBLE       MLKOMONDOR_CDOUBLE
-#				define MLTK_CLONGDOULBE   MLKOMONDOR_CLONGDOUBLE
+#define MLTK_CSHORT        MLKOMONDOR_CSHORT
+#define MLTK_CINT          MLKOMONDOR_CINT
+#define MLTK_CLONG         MLKOMONDOR_CLONG
+#define MLTK_CINT64        MLKOMONDOR_CINT64
+#define MLTK_CFLOAT        MLKOMONDOR_CFLOAT
+#define MLTK_CDOUBLE       MLKOMONDOR_CDOUBLE
+#define MLTK_CLONGDOULBE   MLKOMONDOR_CLONGDOUBLE
 
-#				define MLTK_MLSHORT       MLKOMONDOR_MLSHORT
-#				define MLTK_MLINT         MLKOMONDOR_MLINT
-#				define MLTK_MLLONG        MLKOMONDOR_MLLONG
-#				define MLTK_MLINT64       MLKOMONDOR_MLINT64
-#				define MLTK_MLFLOAT       MLKOMONDOR_MLFLOAT
-#				define MLTK_MLDOUBLE      MLKOMONDOR_MLDOUBLE
-#				define MLTK_MLLONGDOUBLE  MLKOMONDOR_MLLONGDOUBLE
+#define MLTK_MLSHORT       MLKOMONDOR_MLSHORT
+#define MLTK_MLINT         MLKOMONDOR_MLINT
+#define MLTK_MLLONG        MLKOMONDOR_MLLONG
+#define MLTK_MLINT64       MLKOMONDOR_MLINT64
+#define MLTK_MLFLOAT       MLKOMONDOR_MLFLOAT
+#define MLTK_MLDOUBLE      MLKOMONDOR_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLKOMONDOR_MLLONGDOUBLE
 
-#			endif /* _ILP32 || _LP64 */
-#		else
-#			if defined(_ILP32)
-#				define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLBORZOI_NUMERICS_ID
+#endif /* _ILP32 || _LP64 */
+#else
+#if defined(_ILP32)
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLBORZOI_NUMERICS_ID
 
-#				define MLKT_CSHORT        MLBORZOI_CSHORT
-#				define MLTK_CINT          MLBORZOI_CINT
-#				define MLTK_CLONG         MLBORZOI_CLONG
-#				define MLTK_CINT64        MLBORZOI_CINT64
-#				define MLTK_CFLOAT        MLBORZOI_CFLOAT
-#				define MLTK_CDOUBLE       MLBORZOI_CDOUBLE
+#define MLKT_CSHORT        MLBORZOI_CSHORT
+#define MLTK_CINT          MLBORZOI_CINT
+#define MLTK_CLONG         MLBORZOI_CLONG
+#define MLTK_CINT64        MLBORZOI_CINT64
+#define MLTK_CFLOAT        MLBORZOI_CFLOAT
+#define MLTK_CDOUBLE       MLBORZOI_CDOUBLE
 
-#				define MLTK_MLSHORT       MLBORZOI_MLSHORT
-#				define MLTK_MLINT         MLBORZOI_MLINT
-#				define MLTK_MLLONG        MLBORZOI_MLLONG
-#				define MLTK_MLINT64       MLBORZOI_MLINT64
-#				define MLTK_MLFLOAT       MLBORZOI_MLFLOAT
-#				define MLTK_MLDOUBLE      MLBORZOI_MLDOUBLE
+#define MLTK_MLSHORT       MLBORZOI_MLSHORT
+#define MLTK_MLINT         MLBORZOI_MLINT
+#define MLTK_MLLONG        MLBORZOI_MLLONG
+#define MLTK_MLINT64       MLBORZOI_MLINT64
+#define MLTK_MLFLOAT       MLBORZOI_MLFLOAT
+#define MLTK_MLDOUBLE      MLBORZOI_MLDOUBLE
 
-#			elif defined(_LP64)
-#				define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLBRIARD_NUMERICS_ID
+#elif defined(_LP64)
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLBRIARD_NUMERICS_ID
 
-#				define MLTK_CSHORT        MLBRIARD_CSHORT
-#				define MLTK_CINT          MLBRIARD_CINT
-#				define MLTK_CLONG         MLBRIARD_CLONG
-#				define MLTK_CINT64        MLBRIARD_CINT64
-#				define MLTK_CFLOAT        MLBRIARD_CFLOAT
-#				define MLTK_CDOUBLE       MLBRIARD_CDOUBLE
+#define MLTK_CSHORT        MLBRIARD_CSHORT
+#define MLTK_CINT          MLBRIARD_CINT
+#define MLTK_CLONG         MLBRIARD_CLONG
+#define MLTK_CINT64        MLBRIARD_CINT64
+#define MLTK_CFLOAT        MLBRIARD_CFLOAT
+#define MLTK_CDOUBLE       MLBRIARD_CDOUBLE
 
-#				define MLTK_MLSHORT       MLBRIARD_MLSHORT
-#				define MLTK_MLINT         MLBRIARD_MLINT
-#				define MLTK_MLLONG        MLBRIARD_MLLONG
-#				define MLTK_MLINT64       MLBRIARD_MLINT64
-#				define MLTK_MLFLOAT       MLBRIARD_MLFLOAT
-#				define MLTK_MLDOUBLE      MLBRIARD_MLDOUBLE
+#define MLTK_MLSHORT       MLBRIARD_MLSHORT
+#define MLTK_MLINT         MLBRIARD_MLINT
+#define MLTK_MLLONG        MLBRIARD_MLLONG
+#define MLTK_MLINT64       MLBRIARD_MLINT64
+#define MLTK_MLFLOAT       MLBRIARD_MLFLOAT
+#define MLTK_MLDOUBLE      MLBRIARD_MLDOUBLE
 
-#			endif /* _ILP32 || _LP64 */
+#endif /* _ILP32 || _LP64 */
 			/* no error directive here as the user may be
 			 * using a different compiler.  Some macros
 			 * simply won't be available.
 			 */
-#		endif /* __SUNPRO_C > 0x301 || __GNUC__ */
+#endif /* __SUNPRO_C > 0x301 || __GNUC__ */
 
-#	elif __i386 || __i386__ || i386
-#		if __SUNPRO_C >= 0x301 || __SUNPRO_CC >= 0x301
-#			define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLNORWEGIANELKHOUND_NUMERICS_ID
+#elif __i386 || __i386__ || i386
+#if __SUNPRO_C >= 0x301 || __SUNPRO_CC >= 0x301
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLNORWEGIANELKHOUND_NUMERICS_ID
 
-#			define MLTK_CSHORT        MLNORWEGIANELKHOUND_CSHORT
-#			define MLTK_CINT          MLNORWEGIANELKHOUND_CINT
-#			define MLTK_CLONG         MLNORWEGIANELKHOUND_CLONG
-#			define MLTK_CINT64        MLNORWEGIANELKHOUND_CINT64
-#			define MLTK_CFLOAT        MLNORWEGIANELKHOUND_CFLOAT
-#			define MLTK_CDOUBLE       MLNORWEGIANELKHOUND_CDOUBLE
-#			define MLTK_CLONGDOULBE   MLNORWEGIANELKHOUND_CLONGDOUBLE
+#define MLTK_CSHORT        MLNORWEGIANELKHOUND_CSHORT
+#define MLTK_CINT          MLNORWEGIANELKHOUND_CINT
+#define MLTK_CLONG         MLNORWEGIANELKHOUND_CLONG
+#define MLTK_CINT64        MLNORWEGIANELKHOUND_CINT64
+#define MLTK_CFLOAT        MLNORWEGIANELKHOUND_CFLOAT
+#define MLTK_CDOUBLE       MLNORWEGIANELKHOUND_CDOUBLE
+#define MLTK_CLONGDOULBE   MLNORWEGIANELKHOUND_CLONGDOUBLE
 
-#			define MLTK_MLSHORT       MLNORWEGIANELKHOUND_MLSHORT
-#			define MLTK_MLINT         MLNORWEGIANELKHOUND_MLINT
-#			define MLTK_MLLONG        MLNORWEGIANELKHOUND_MLLONG
-#			define MLTK_MLINT64       MLNORWEGIANELKHOUND_MLINT64
-#			define MLTK_MLFLOAT       MLNORWEGIANELKHOUND_MLFLOAT
-#			define MLTK_MLDOUBLE      MLNORWEGIANELKHOUND_MLDOUBLE
-#			define MLTK_MLLONGDOUBLE  MLNORWEGIANELKHOUND_MLLONGDOUBLE
-#		else
+#define MLTK_MLSHORT       MLNORWEGIANELKHOUND_MLSHORT
+#define MLTK_MLINT         MLNORWEGIANELKHOUND_MLINT
+#define MLTK_MLLONG        MLNORWEGIANELKHOUND_MLLONG
+#define MLTK_MLINT64       MLNORWEGIANELKHOUND_MLINT64
+#define MLTK_MLFLOAT       MLNORWEGIANELKHOUND_MLFLOAT
+#define MLTK_MLDOUBLE      MLNORWEGIANELKHOUND_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLNORWEGIANELKHOUND_MLLONGDOUBLE
+#else
 			/* no error directive here as the user may be
 			 * using a different compiler.  Some macros
 			 * simply won't be available.
 			 */
-#		endif /* __SUNPRO_C >= 0x301 || __SUNPRO_CC >= 0x301 */
-
-#	elif __x86_64 || __x86_64__ || x86_64
-#		define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLNORWICHTERRIOR_NUMERICS_ID
-
-#		define MLTK_CSHORT        MLNORWICHTERRIOR_CSHORT
-#		define MLTK_CINT          MLNORWICHTERRIOR_CINT
-#		define MLTK_CLONG         MLNORWICHTERRIOR_CLONG
-#		define MLTK_CINT64        MLNORWICHTERRIOR_CINT64
-#		define MLTK_CFLOAT        MLNORWICHTERRIOR_CFLOAT
-#		define MLTK_CDOUBLE       MLNORWICHTERRIOR_CDOUBLE
-#		define MLTK_CLONGDOUBLE   MLNORWICHTERRIOR_CLONGDOUBLE
-
-#		define MLTK_MLSHORT       MLNORWICHTERRIOR_MLSHORT
-#		define MLTK_MLINT         MLNORWICHTERRIOR_MLINT
-#		define MLTK_MLLONG        MLNORWICHTERRIOR_MLLONG
-#		define MLTK_MLINT64       MLNORWICHTERRIOR_MLINT64
-#		define MLTK_MLFLOAT       MLNORWICHTERRIOR_MLFLOAT
-#		define MLTK_MLDOUBLE      MLNORWICHTERRIOR_MLDOUBLE
-#		define MLTK_MLLONGDOUBLE  MLNORWICHTERRIOR_MLLONGDOUBLE
-
-#	elif __SVR4 || __svr4__
-#		include <sys/types.h>
-
-#		if defined(_ILP32)
-#			define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLSAINTBERNARD_NUMERICS_ID
-
-#			define MLTK_CSHORT        MLSAINTBERNARD_CSHORT
-#			define MLTK_CINT          MLSAINTBERNARD_CINT
-#			define MLTK_CLONG         MLSAINTBERNARD_CLONG
-#			define MLTK_CINT64        MLSAINTBERNARD_CINT64
-#			define MLTK_CFLOAT        MLSAINTBERNARD_CFLOAT
-#			define MLTK_CDOUBLE       MLSAINTBERNARD_CDOUBLE
-#			define MLTK_CLONGDOULBE   MLSAINTBERNARD_CLONGDOUBLE
-
-#			define MLTK_MLSHORT       MLSAINTBERNARD_MLSHORT
-#			define MLTK_MLINT         MLSAINTBERNARD_MLINT
-#			define MLTK_MLLONG        MLSAINTBERNARD_MLLONG
-#			define MLTK_MLINT64       MLSAINTBERNARD_MLINT64
-#			define MLTK_MLFLOAT       MLSAINTBERNARD_MLFLOAT
-#			define MLTK_MLDOUBLE      MLSAINTBERNARD_MLDOUBLE
-#			define MLTK_MLLONGDOUBLE  MLSAINTBERNARD_MLLONGDOUBLE
-
-#		elif defined(_LP64)
-#			define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLBERNESEMOUNTAINDOG_NUMERICS_ID
-
-#			define MLTK_CSHORT        MLBERNESEMOUNTAINDOG_CSHORT
-#			define MLTK_CINT          MLBERNESEMOUNTAINDOG_CINT
-#			define MLTK_CLONG         MLBERNESEMOUNTAINDOG_CLONG
-#			define MLTK_CINT64        MLBERNESEMOUNTAINDOG_CINT64
-#			define MLTK_CFLOAT        MLBERNESEMOUNTAINDOG_CFLOAT
-#			define MLTK_CDOUBLE       MLBERNESEMOUNTAINDOG_CDOUBLE
-#			define MLTK_CLONGDOULBE   MLBERNESEMOUNTAINDOG_CLONGDOUBLE
-
-#			define MLTK_MLSHORT       MLBERNESEMOUNTAINDOG_MLSHORT
-#			define MLTK_MLINT         MLBERNESEMOUNTAINDOG_MLINT
-#			define MLTK_MLLONG        MLBERNESEMOUNTAINDOG_MLLONG
-#			define MLTK_MLINT64       MLBERNESEMOUNTAINDOG_MLINT64
-#			define MLTK_MLFLOAT       MLBERNESEMOUNTAINDOG_MLFLOAT
-#			define MLTK_MLDOUBLE      MLBERNESEMOUNTAINDOG_MLDOUBLE
-#			define MLTK_MLLONGDOUBLE  MLBERNESEMOUNTAINDOG_MLLONGDOUBLE
-
-#		endif /* _ILP32 || _LP64 */
-
-#	else
-/* syntax error */ )
-#	endif
-
-#elif (WIN32_MATHLINK || WIN64_MATHLINK) && NEW_WIN32_NUMENV
-#	if WIN32_MATHLINK
-#		if MLINTERFACE < 3
-#			define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLSETTER_NUMERICS_ID
-
-#			define MLTK_CSHORT        MLSETTER_CSHORT
-#			define MLTK_CINT          MLSETTER_CINT
-#			define MLTK_CLONG         MLSETTER_CLONG
-#			define MLTK_CINT64        MLSETTER_CINT64
-#			define MLTK_CFLOAT        MLSETTER_CFLOAT
-#			define MLTK_CDOUBLE       MLSETTER_CDOUBLE
-#			define MLTK_CLONGDOULBE   MLSETTER_CLONGDOUBLE
-
-#			define MLTK_MLSHORT       MLSETTER_MLSHORT
-#			define MLTK_MLINT         MLSETTER_MLINT
-#			define MLTK_MLLONG        MLSETTER_MLLONG
-#			define MLTK_MLINT64       MLSETTER_MLINT64
-#			define MLTK_MLFLOAT       MLSETTER_MLFLOAT
-#			define MLTK_MLDOUBLE      MLSETTER_MLDOUBLE
-#			define MLTK_MLLONGDOUBLE  MLSETTER_MLLONGDOUBLE
-#		else /* MLINTERFACE >= 3 */
-#			define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLFRENCH_BULLDOG_NUMERICS_ID
-
-#			define MLTK_CSHORT        MLFRENCH_BULLDOG_CSHORT
-#			define MLTK_CINT          MLFRENCH_BULLDOG_CINT
-#			define MLTK_CLONG         MLFRENCH_BULLDOG_CLONG
-#			define MLTK_CINT64        MLFRENCH_BULLDOG_CINT64
-#			define MLTK_CFLOAT        MLFRENCH_BULLDOG_CFLOAT
-#			define MLTK_CDOUBLE       MLFRENCH_BULLDOG_CDOUBLE
-#			define MLTK_CLONGDOUBLE   MLFRENCH_BULLDOG_CLONGDOUBLE
-
-#			define MLTK_MLSHORT       MLFRENCH_BULLDOG_MLSHORT
-#			define MLTK_MLINT         MLFRENCH_BULLDOG_MLINT
-#			define MLTK_MLLONG        MLFRENCH_BULLDOG_MLLONG
-#			define MLTK_MLINT64       MLFRENCH_BULLDOG_MLINT64
-#			define MLTK_MLFLOAT       MLFRENCH_BULLDOG_MLFLOAT
-#			define MLTK_MLDOUBLE      MLFRENCH_BULLDOG_MLDOUBLE
-#			define MLTK_MLLONGDOUBLE  MLFRENCH_BULLDOG_MLLONGDOUBLE
-#		endif /* MLINTERFACE < 3 */
-#	elif WIN64_MATHLINK
-#		define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLBICHON_FRISE_NUMERICS_ID
-
-#		define MLTK_CSHORT        MLBICHON_FRISE_CSHORT
-#		define MLTK_CINT          MLBICHON_FRISE_CINT
-#		define MLTK_CLONG         MLBICHON_FRISE_CLONG
-#		define MLTK_CINT64        MLBICHON_FRISE_CINT64
-#		define MLTK_CFLOAT        MLBICHON_FRISE_CFLOAT
-#		define MLTK_CDOUBLE       MLBICHON_FRISE_CDOUBLE
-#		define MLTK_CLONGDOUBLE   MLBICHON_FRISE_CLONGDOUBLE
-
-#		define MLTK_MLSHORT       MLBICHON_FRISE_MLSHORT
-#		define MLTK_MLINT         MLBICHON_FRISE_MLINT
-#		define MLTK_MLLONG        MLBICHON_FRISE_MLLONG
-#		define MLTK_MLINT64       MLBICHON_FRISE_MLINT64
-#		define MLTK_MLFLOAT       MLBICHON_FRISE_MLFLOAT
-#		define MLTK_MLDOUBLE      MLBICHON_FRISE_MLDOUBLE
-#		define MLTK_MLLONGDOUBLE  MLBICHON_FRISE_MLLONGDOUBLE
-#	endif /* WIN32_MATHLINK || WIN64_MATHLINK */
-
-#elif ALPHA_WIN32_MATHLINK
-#	define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLHELEN_NUMERICS_ID
-
-#	define MLTK_CSHORT        MLHELEN_CSHORT
-#	define MLTK_CINT          MLHELEN_CINT
-#	define MLTK_CLONG         MLHELEN_CLONG
-#	define MLTK_CINT64        MLHELEN_CINT64
-#	define MLTK_CFLOAT        MLHELEN_CFLOAT
-#	define MLTK_CDOUBLE       MLHELEN_CDOUBLE
-#	define MLTK_CLONGDOUBLE   MLHELEN_CLONGDOUBLE
-
-#	define MLTK_MLSHORT       MLHELEN_MLSHORT
-#	define MLTK_MLINT         MLHELEN_MLINT
-#	define MLTK_MLLONG        MLHELEN_MLLONG
-#	define MLTK_MLINT64       MLHELEN_MLINT64
-#	define MLTK_MLFLOAT       MLHELEN_MLFLOAT
-#	define MLTK_MLDOUBLE      MLHELEN_MLDOUBLE
-#	define MLTK_MLLONGDOUBLE  MLHELEN_MLLONGDOUBLE
-
-#elif DARWIN_MATHLINK
-#	if PPC_DARWIN_MATHLINK
-		/* We must use a different numerics env if we are built with gcc 3.3 or earlier. */
-#		if GCC_MATHLINK_VERSION <= 30300
-#			define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLBEAGLE_NUMERICS_ID
-
-#			define MLTK_CSHORT        MLBEAGLE_CSHORT
-#			define MLTK_CINT          MLBEAGLE_CINT
-#			define MLTK_CLONG         MLBEAGLE_CLONG
-#			define MLTK_CINT64        MLBEAGLE_CINT64
-#			define MLTK_CFLOAT        MLBEAGLE_CFLOAT
-#			define MLTK_CDOUBLE       MLBEAGLE_CDOUBLE
-#			define MLTK_CLONGDOUBLE   MLBEAGLE_CLONGDOUBLE
-
-#			define MLTK_MLSHORT       MLBEAGLE_MLSHORT
-#			define MLTK_MLINT         MLBEAGLE_MLINT
-#			define MLTK_MLLONG        MLBEAGLE_MLLONG
-#			define MLTK_MLINT64       MLBEAGLE_MLINT64
-#			define MLTK_MLFLOAT       MLBEAGLE_MLFLOAT
-#			define MLTK_MLDOUBLE      MLBEAGLE_MLDOUBLE
-#			define MLTK_MLLONGDOUBLE  MLBEAGLE_MLLONGDOUBLE
-
-#		else
-#			define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLBULLTERRIER_NUMERICS_ID
-
-#			define MLTK_CSHORT        MLBULLTERRIER_CSHORT
-#			define MLTK_CINT          MLBULLTERRIER_CINT
-#			define MLTK_CLONG         MLBULLTERRIER_CLONG
-#			define MLTK_CINT64        MLBULLTERRIER_CINT64
-#			define MLTK_CFLOAT        MLBULLTERRIER_CFLOAT
-#			define MLTK_CDOUBLE       MLBULLTERRIER_CDOUBLE
-#			define MLTK_CLONGDOUBLE   MLBULLTERRIER_CLONGDOUBLE
-
-#			define MLTK_MLSHORT       MLBULLTERRIER_MLSHORT
-#			define MLTK_MLINT         MLBULLTERRIER_MLINT
-#			define MLTK_MLLONG        MLBULLTERRIER_MLLONG
-#			define MLTK_MLINT64       MLBULLTERRIER_MLINT64
-#			define MLTK_MLFLOAT       MLBULLTERRIER_MLFLOAT
-#			define MLTK_MLDOUBLE      MLBULLTERRIER_MLDOUBLE
-#			define MLTK_MLLONGDOUBLE  MLBULLTERRIER_MLLONGDOUBLE
-
-#		endif /* GCC_MATHLINK_VERSION > 30300 */
-
-#	elif PPC64_DARWIN_MATHLINK
-#		define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLBORDERTERRIER_NUMERICS_ID
-
-#		define MLTK_CSHORT        MLBORDERTERRIER_CSHORT
-#		define MLTK_CINT          MLBORDERTERRIER_CINT
-#		define MLTK_CLONG         MLBORDERTERRIER_CLONG
-#		define MLTK_CINT64        MLBORDERTERRIER_CINT64
-#		define MLTK_CFLOAT        MLBORDERTERRIER_CFLOAT
-#		define MLTK_CDOUBLE       MLBORDERTERRIER_CDOUBLE
-#		define MLTK_CLONGDOUBLE   MLBORDERTERRIER_CLONGDOUBLE
-
-#		define MLTK_MLSHORT       MLBORDERTERRIER_MLSHORT
-#		define MLTK_MLINT         MLBORDERTERRIER_MLINT
-#		define MLTK_MLLONG        MLBORDERTERRIER_MLLONG
-#		define MLTK_MLINT64       MLBORDERTERRIER_MLINT64
-#		define MLTK_MLFLOAT       MLBORDERTERRIER_MLFLOAT
-#		define MLTK_MLDOUBLE      MLBORDERTERRIER_MLDOUBLE
-#		define MLTK_MLLONGDOUBLE  MLBORDERTERRIER_MLLONGDOUBLE
-
-#	elif X86_DARWIN_MATHLINK
-#		define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLBASENJI_NUMERICS_ID
-
-#		define MLTK_CSHORT        MLBASENJI_CSHORT
-#		define MLTK_CINT          MLBASENJI_CINT
-#		define MLTK_CLONG         MLBASENJI_CLONG
-#		define MLTK_CINT64        MLBASENJI_CINT64
-#		define MLTK_CFLOAT        MLBASENJI_CFLOAT
-#		define MLTK_CDOUBLE       MLBASENJI_CDOUBLE
-#		define MLTK_CLONGDOUBLE   MLBASENJI_CLONGDOUBLE
-
-#		define MLTK_MLSHORT       MLBASENJI_MLSHORT
-#		define MLTK_MLINT         MLBASENJI_MLINT
-#		define MLTK_MLLONG        MLBASENJI_MLLONG
-#		define MLTK_MLINT64       MLBASENJI_MLINT64
-#		define MLTK_MLFLOAT       MLBASENJI_MLFLOAT
-#		define MLTK_MLDOUBLE      MLBASENJI_MLDOUBLE
-#		define MLTK_MLLONGDOUBLE  MLBASENJI_MLLONGDOUBLE
-
-#	elif X86_64_DARWIN_MATHLINK
-#		define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLGREATDANE_NUMERICS_ID
-
-#		define MLTK_CSHORT        MLGREATDANE_CSHORT
-#		define MLTK_CINT          MLGREATDANE_CINT
-#		define MLTK_CLONG         MLGREATDANE_CLONG
-#		define MLTK_CINT64        MLGREATDANE_CINT64
-#		define MLTK_CFLOAT        MLGREATDANE_CFLOAT
-#		define MLTK_CDOUBLE       MLGREATDANE_CDOUBLE
-#		define MLTK_CLONGDOUBLE   MLGREATDANE_CLONGDOUBLE
-
-#		define MLTK_MLSHORT       MLGREATDANE_MLSHORT
-#		define MLTK_MLINT         MLGREATDANE_MLINT
-#		define MLTK_MLLONG        MLGREATDANE_MLLONG
-#		define MLTK_MLINT64       MLGREATDANE_MLINT64
-#		define MLTK_MLFLOAT       MLGREATDANE_MLFLOAT
-#		define MLTK_MLDOUBLE      MLGREATDANE_MLDOUBLE
-#		define MLTK_MLLONGDOUBLE  MLGREATDANE_MLLONGDOUBLE
-#	endif
-
-#elif I86_LINUX_MATHLINK
-#	define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLREDDOG_NUMERICS_ID
-
-#	define MLTK_CSHORT        MLREDDOG_CSHORT
-#	define MLTK_CINT          MLREDDOG_CINT
-#	define MLTK_CLONG         MLREDDOG_CLONG
-#	define MLTK_CINT64        MLREDDOG_CINT64
-#	define MLTK_CFLOAT        MLREDDOG_CFLOAT
-#	define MLTK_CDOUBLE       MLREDDOG_CDOUBLE
-#	define MLTK_CLONGDOUBLE   MLREDDOG_CLONGDOUBLE
-
-#	define MLTK_MLSHORT       MLREDDOG_MLSHORT
-#	define MLTK_MLINT         MLREDDOG_MLINT
-#	define MLTK_MLLONG        MLREDDOG_MLLONG
-#	define MLTK_MLINT64       MLREDDOG_MLINT64
-#	define MLTK_MLFLOAT       MLREDDOG_MLFLOAT
-#	define MLTK_MLDOUBLE      MLREDDOG_MLDOUBLE
-#	define MLTK_MLLONGDOUBLE  MLREDDOG_MLLONGDOUBLE
-
-#elif IA64_LINUX_MATHLINK
-#	define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLAUSTRALIANCATTLEDOG_NUMERICS_ID
-
-#	define MLTK_CSHORT        MLAUSTRALIANCATTLEDOG_CSHORT
-#	define MLTK_CINT          MLAUSTRALIANCATTLEDOG_CINT
-#	define MLTK_CLONG         MLAUSTRALIANCATTLEDOG_CLONG
-#	define MLTK_CINT64        MLAUSTRALIANCATTLEDOG_CINT64
-#	define MLTK_CFLOAT        MLAUSTRALIANCATTLEDOG_CFLOAT
-#	define MLTK_CDOUBLE       MLAUSTRALIANCATTLEDOG_CDOUBLE
-#	define MLTK_CLONGDOUBLE   MLAUSTRALIANCATTLEDOG_CLONGDOUBLE
-
-#	define MLTK_MLSHORT       MLAUSTRALIANCATTLEDOG_MLSHORT
-#	define MLTK_MLINT         MLAUSTRALIANCATTLEDOG_MLINT
-#	define MLTK_MLLONG        MLAUSTRALIANCATTLEDOG_MLLONG
-#	define MLTK_MLINT64       MLAUSTRALIANCATTLEDOG_MLINT64
-#	define MLTK_MLFLOAT       MLAUSTRALIANCATTLEDOG_MLFLOAT
-#	define MLTK_MLDOUBLE      MLAUSTRALIANCATTLEDOG_MLDOUBLE
-#	define MLTK_MLLONGDOUBLE  MLAUSTRALIANCATTLEDOG_MLLONGDOUBLE
-
-#elif X86_64_LINUX_MATHLINK
-#	define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLBOXER_NUMERICS_ID
-
-#	define MLTK_CSHORT        MLBOXER_CSHORT
-#	define MLTK_CINT          MLBOXER_CINT
-#	define MLTK_CLONG         MLBOXER_CLONG
-#	define MLTK_CINT64        MLBOXER_CINT64
-#	define MLTK_CFLOAT        MLBOXER_CFLOAT
-#	define MLTK_CDOUBLE       MLBOXER_CDOUBLE
-#	define MLTK_CLONGDOUBLE   MLBOXER_CLONGDOUBLE
-
-#	define MLTK_MLSHORT       MLBOXER_MLSHORT
-#	define MLTK_MLINT         MLBOXER_MLINT
-#	define MLTK_MLLONG        MLBOXER_MLLONG
-#	define MLTK_MLINT64       MLBOXER_MLINT64
-#	define MLTK_MLFLOAT       MLBOXER_MLFLOAT
-#	define MLTK_MLDOUBLE      MLBOXER_MLDOUBLE
-#	define MLTK_MLLONGDOUBLE  MLBOXER_MLLONGDOUBLE
-
-#elif AXP_LINUX_MATHLINK
-#	define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLAKITAINU_NUMERICS_ID
-
-#	define MLTK_CSHORT        MLAKITAINU_CSHORT
-#	define MLTK_CINT          MLAKITAINU_CINT
-#	define MLTK_CLONG         MLAKITAINU_CLONG
-#	define MLTK_CINT64        MLAKITAINU_CINT64
-#	define MLTK_CFLOAT        MLAKITAINU_CFLOAT
-#	define MLTK_CDOUBLE       MLAKITAINU_CDOUBLE
-#	define MLTK_CLONGDOUBLE   MLAKITAINU_CLONGDOUBLE
-
-#	define MLTK_MLSHORT       MLAKITAINU_MLSHORT
-#	define MLTK_MLINT         MLAKITAINU_MLINT
-#	define MLTK_MLLONG        MLAKITAINU_MLLONG
-#	define MLTK_MLINT64       MLAKITAINU_MLINT64
-#	define MLTK_MLFLOAT       MLAKITAINU_MLFLOAT
-#	define MLTK_MLDOUBLE      MLAKITAINU_MLDOUBLE
-#	define MLTK_MLLONGDOUBLE  MLAKITAINU_MLLONGDOUBLE
-
-#elif ARM_LINUX_MATHLINK
-#	define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLCHIHUAHUA_NUMERICS_ID
-
-#	define MLTK_CSHORT        MLCHIHUAHUA_CSHORT
-#	define MLTK_CINT          MLCHIHUAHUA_CINT
-#	define MLTK_CLONG         MLCHIHUAHUA_CLONG
-#	define MLTK_CINT64        MLCHIHUAHUA_CINT64
-#	define MLTK_CFLOAT        MLCHIHUAHUA_CFLOAT
-#	define MLTK_CDOUBLE       MLCHIHUAHUA_CDOUBLE
-#	define MLTK_CLONGDOUBLE   MLCHIHUAHUA_CLONGDOUBLE
-
-#	define MLTK_MLSHORT       MLCHIHUAHUA_MLSHORT
-#	define MLTK_MLINT         MLCHIHUAHUA_MLINT
-#	define MLTK_MLLONG        MLCHIHUAHUA_MLLONG
-#	define MLTK_MLINT64       MLCHIHUAHUA_MLINT64
-#	define MLTK_MLFLOAT       MLCHIHUAHUA_MLFLOAT
-#	define MLTK_MLDOUBLE      MLCHIHUAHUA_MLDOUBLE
-#	define MLTK_MLLONGDOUBLE  MLCHIHUAHUA_MLLONGDOUBLE
-
-#elif PPC_LINUX_MATHLINK
-#	define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLROTTWEILER_NUMERICS_ID
-
-#	define MLTK_CSHORT        MLROTTWEILER_CSHORT
-#	define MLTK_CINT          MLROTTWEILER_CINT
-#	define MLTK_CLONG         MLROTTWEILER_CLONG
-#	define MLTK_CINT64        MLROTTWEILER_CINT64
-#	define MLTK_CFLOAT        MLROTTWEILER_CFLOAT
-#	define MLTK_CDOUBLE       MLROTTWEILER_CDOUBLE
-#	define MLTK_CLONGDOUBLE   MLROTTWEILER_CLONGDOUBLE
-
-#	define MLTK_MLSHORT       MLROTTWEILER_MLSHORT
-#	define MLTK_MLINT         MLROTTWEILER_MLINT
-#	define MLTK_MLLONG        MLROTTWEILER_MLLONG
-#	define MLTK_MLINT64       MLROTTWEILER_MLINT64
-#	define MLTK_MLFLOAT       MLROTTWEILER_MLFLOAT
-#	define MLTK_MLDOUBLE      MLROTTWEILER_MLDOUBLE
-#	define MLTK_MLLONGDOUBLE  MLROTTWEILER_MLLONGDOUBLE
-
-#elif AIX_MATHLINK
-#	if defined(__64BIT__)
-#		if defined(MATHLINK_NUMERICS_ENVIRONMENT_ID)
-#			undef MATHLINK_NUMERICS_ENVIRONMENT_ID
-#		endif
-
-#		ifdef __LONGDOUBLE128
-#			define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLPHARAOHHOUND_NUMERICS_ID
-
-#			define MLTK_CSHORT        MLPHARAOHHOUND_CSHORT
-#			define MLTK_CINT          MLPHARAOHHOUND_CINT
-#			define MLTK_CLONG         MLPHARAOHHOUND_CLONG
-#			define MLTK_CINT64        MLPHARAOHHOUND_CINT64
-#			define MLTK_CFLOAT        MLPHARAOHHOUND_CFLOAT
-#			define MLTK_CDOUBLE       MLPHARAOHHOUND_CDOUBLE
-#			define MLTK_CLONGDOUBLE   MLPHARAOHHOUND_CLONGDOUBLE
-
-#			define MLTK_MLSHORT       MLPHARAOHHOUND_MLSHORT
-#			define MLTK_MLINT         MLPHARAOHHOUND_MLINT
-#			define MLTK_MLLONG        MLPHARAOHHOUND_MLLONG
-#			define MLTK_MLINT64       MLPHARAOHHOUND_MLINT64
-#			define MLTK_MLFLOAT       MLPHARAOHHOUND_MLFLOAT
-#			define MLTK_MLDOUBLE      MLPHARAOHHOUND_MLDOUBLE
-#			define MLTK_MLLONGDOUBLE  MLPHARAOHHOUND_MLLONGDOUBLE
-#		else
-#			define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLTROUT_NUMERICS_ID
-
-#			define MLTK_CSHORT        MLTROUT_CSHORT
-#			define MLTK_CINT          MLTROUT_CINT
-#			define MLTK_CLONG         MLTROUT_CLONG
-#			define MLTK_CINT64        MLTROUT_CINT64
-#			define MLTK_CFLOAT        MLTROUT_CFLOAT
-#			define MLTK_CDOUBLE       MLTROUT_CDOUBLE
-#			define MLTK_CLONGDOUBLE   MLTROUT_CLONGDOUBLE
-
-#			define MLTK_MLSHORT       MLTROUT_MLSHORT
-#			define MLTK_MLINT         MLTROUT_MLINT
-#			define MLTK_MLLONG        MLTROUT_MLLONG
-#			define MLTK_MLINT64       MLTROUT_MLINT64
-#			define MLTK_MLFLOAT       MLTROUT_MLFLOAT
-#			define MLTK_MLDOUBLE      MLTROUT_MLDOUBLE
-#			define MLTK_MLLONGDOUBLE  MLTROUT_MLLONGDOUBLE
-#		endif /* __LONGDOUBLE 128 */
-#	else
-#		if defined(MATHLINK_NUMERICS_ENVIRONMENT_ID)
-#			undef MATHLINK_NUMERICS_ENVIRONMENT_ID
-#		endif
-
-#		ifdef __LONGDOUBLE128
-#			define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLPUG_NUMERICS_ID
-
-#			define MLTK_CSHORT        MLPUG_CSHORT
-#			define MLTK_CINT          MLPUG_CINT
-#			define MLTK_CLONG         MLPUG_CLONG
-#			define MLTK_CINT64        MLPUG_CINT64
-#			define MLTK_CFLOAT        MLPUG_CFLOAT
-#			define MLTK_CDOUBLE       MLPUG_CDOUBLE
-#			define MLTK_CLONGDOUBLE   MLPUG_CLONGDOUBLE
-
-#			define MLTK_MLSHORT       MLPUG_MLSHORT
-#			define MLTK_MLINT         MLPUG_MLINT
-#			define MLTK_MLLONG        MLPUG_MLLONG
-#			define MLTK_MLINT64       MLPUG_MLINT64
-#			define MLTK_MLFLOAT       MLPUG_MLFLOAT
-#			define MLTK_MLDOUBLE      MLPUG_MLDOUBLE
-#			define MLTK_MLLONGDOUBLE  MLPUG_MLLONGDOUBLE
-#		else
-#			define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLPOINTER_NUMERICS_ID
-
-#			define MLTK_CSHORT        MLPOINTER_CSHORT
-#			define MLTK_CINT          MLPOINTER_CINT
-#			define MLTK_CLONG         MLPOINTER_CLONG
-#			define MLTK_CINT64        MLPOINTER_CINT64
-#			define MLTK_CFLOAT        MLPOINTER_CFLOAT
-#			define MLTK_CDOUBLE       MLPOINTER_CDOUBLE
-#			define MLTK_CLONGDOUBLE   MLPOINTER_CLONGDOUBLE
-
-#			define MLTK_MLSHORT       MLPOINTER_MLSHORT
-#			define MLTK_MLINT         MLPOINTER_MLINT
-#			define MLTK_MLLONG        MLPOINTER_MLLONG
-#			define MLTK_MLINT64       MLPOINTER_MLINT64
-#			define MLTK_MLFLOAT       MLPOINTER_MLFLOAT
-#			define MLTK_MLDOUBLE      MLPOINTER_MLDOUBLE
-#			define MLTK_MLLONGDOUBLE  MLPOINTER_MLLONGDOUBLE
-#		endif /* __LONGDOUBLE128 */
-#	endif /* __64BIT__ */
-
-#elif HPUX_MATHLINK
-#	if defined(__LP64__)
-#		define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLSAMOYED_NUMERICS_ID
-
-#		define MLTK_CSHORT        MLSAMOYED_CSHORT
-#		define MLTK_CINT          MLSAMOYED_CINT
-#		define MLTK_CLONG         MLSAMOYED_CLONG
-#		define MLTK_CINT64        MLSAMOYED_CINT64
-#		define MLTK_CFLOAT        MLSAMOYED_CFLOAT
-#		define MLTK_CDOUBLE       MLSAMOYED_CDOUBLE
-#		define MLTK_CLONGDOUBLE   MLSAMOYED_CLONGDOUBLE
-
-#		define MLTK_MLSHORT       MLSAMOYED_MLSHORT
-#		define MLTK_MLINT         MLSAMOYED_MLINT
-#		define MLTK_MLLONG        MLSAMOYED_MLLONG
-#		define MLTK_MLINT64       MLSAMOYED_MLINT64
-#		define MLTK_MLFLOAT       MLSAMOYED_MLFLOAT
-#		define MLTK_MLDOUBLE      MLSAMOYED_MLDOUBLE
-#		define MLTK_MLLONGDOUBLE  MLSAMOYED_MLLONGDOUBLE
-#	else
-#		define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLSIBERIANHUSKY_NUMERICS_ID
-
-#		define MLTK_CSHORT        MLSIBERIANHUSKY_CSHORT
-#		define MLTK_CINT          MLSIBERIANHUSKY_CINT
-#		define MLTK_CLONG         MLSIBERIANHUSKY_CLONG
-#		define MLTK_CINT64        MLSIBERIANHUSKY_CINT64
-#		define MLTK_CFLOAT        MLSIBERIANHUSKY_CFLOAT
-#		define MLTK_CDOUBLE       MLSIBERIANHUSKY_CDOUBLE
-#		define MLTK_CLONGDOUBLE   MLSIBERIANHUSKY_CLONGDOUBLE
-
-#		define MLTK_MLSHORT       MLSIBERIANHUSKY_MLSHORT
-#		define MLTK_MLINT         MLSIBERIANHUSKY_MLINT
-#		define MLTK_MLLONG        MLSIBERIANHUSKY_MLLONG
-#		define MLTK_MLINT64       MLSIBERIANHUSKY_MLINT64
-#		define MLTK_MLFLOAT       MLSIBERIANHUSKY_MLFLOAT
-#		define MLTK_MLDOUBLE      MLSIBERIANHUSKY_MLDOUBLE
-#		define MLTK_MLLONGDOUBLE  MLSIBERIANHUSKY_MLLONGDOUBLE
-#	endif /* __LP64__ */
-
-#elif DIGITAL_MATHLINK
-#	define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLSHIBAINU_NUMERICS_ID
-
-#	define MLTK_CSHORT        MLSHIBAINU_CSHORT
-#	define MLTK_CINT          MLSHIBAINU_CINT
-#	define MLTK_CLONG         MLSHIBAINU_CLONG
-#	define MLTK_CINT64        MLSHIBAINU_CINT64
-#	define MLTK_CFLOAT        MLSHIBAINU_CFLOAT
-#	define MLTK_CDOUBLE       MLSHIBAINU_CDOUBLE
-#	define MLTK_CLONGDOUBLE   MLSHIBAINU_CLONGDOUBLE
-
-#	define MLTK_MLSHORT       MLSHIBAINU_MLSHORT
-#	define MLTK_MLINT         MLSHIBAINU_MLINT
-#	define MLTK_MLLONG        MLSHIBAINU_MLLONG
-#	define MLTK_MLINT64       MLSHIBAINU_MLINT64
-#	define MLTK_MLFLOAT       MLSHIBAINU_MLFLOAT
-#	define MLTK_MLDOUBLE      MLSHIBAINU_MLDOUBLE
-#	define MLTK_MLLONGDOUBLE  MLSHIBAINU_MLLONGDOUBLE
-
-#elif IRIX_MATHLINK
-#	if N32_IRIX_MATHLINK
-#		define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLNEWFOUNDLAND_NUMERICS_ID
-
-#		define MLTK_CSHORT        MLNEWFOUNDLAND_CSHORT
-#		define MLTK_CINT          MLNEWFOUNDLAND_CINT
-#		define MLTK_CLONG         MLNEWFOUNDLAND_CLONG
-#		define MLTK_CINT64        MLNEWFOUNDLAND_CINT64
-#		define MLTK_CFLOAT        MLNEWFOUNDLAND_CFLOAT
-#		define MLTK_CDOUBLE       MLNEWFOUNDLAND_CDOUBLE
-#		define MLTK_CLONGDOUBLE   MLNEWFOUNDLAND_CLONGDOUBLE
-
-#		define MLTK_MLSHORT       MLNEWFOUNDLAND_MLSHORT
-#		define MLTK_MLINT         MLNEWFOUNDLAND_MLINT
-#		define MLTK_MLLONG        MLNEWFOUNDLAND_MLLONG
-#		define MLTK_MLINT64       MLNEWFOUNDLAND_MLINT64
-#		define MLTK_MLFLOAT       MLNEWFOUNDLAND_MLFLOAT
-#		define MLTK_MLDOUBLE      MLNEWFOUNDLAND_MLDOUBLE
-#		define MLTK_MLLONGDOUBLE  MLNEWFOUNDLAND_MLLONGDOUBLE
-#	elif M64_IRIX_MATHLINK
-#		define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLAFFENPINSCHER_NUMERICS_ID
-
-#		define MLTK_CSHORT        MLAFFENPINSCHER_CSHORT
-#		define MLTK_CINT          MLAFFENPINSCHER_CINT
-#		define MLTK_CLONG         MLAFFENPINSCHER_CLONG
-#		define MLTK_CINT64        MLAFFENPINSCHER_CINT64
-#		define MLTK_CFLOAT        MLAFFENPINSCHER_CFLOAT
-#		define MLTK_CDOUBLE       MLAFFENPINSCHER_CDOUBLE
-#		define MLTK_CLONGDOUBLE   MLAFFENPINSCHER_CLONGDOUBLE
-
-#		define MLTK_MLSHORT       MLAFFENPINSCHER_MLSHORT
-#		define MLTK_MLINT         MLAFFENPINSCHER_MLINT
-#		define MLTK_MLLONG        MLAFFENPINSCHER_MLLONG
-#		define MLTK_MLINT64       MLAFFENPINSCHER_MLINT64
-#		define MLTK_MLFLOAT       MLAFFENPINSCHER_MLFLOAT
-#		define MLTK_MLDOUBLE      MLAFFENPINSCHER_MLDOUBLE
-#		define MLTK_MLLONGDOUBLE  MLAFFENPINSCHER_MLLONGDOUBLE
-#	endif
+#endif /* __SUNPRO_C >= 0x301 || __SUNPRO_CC >= 0x301 */
+
+#elif __x86_64 || __x86_64__ || x86_64
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLNORWICHTERRIOR_NUMERICS_ID
+
+#define MLTK_CSHORT        MLNORWICHTERRIOR_CSHORT
+#define MLTK_CINT          MLNORWICHTERRIOR_CINT
+#define MLTK_CLONG         MLNORWICHTERRIOR_CLONG
+#define MLTK_CINT64        MLNORWICHTERRIOR_CINT64
+#define MLTK_CFLOAT        MLNORWICHTERRIOR_CFLOAT
+#define MLTK_CDOUBLE       MLNORWICHTERRIOR_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLNORWICHTERRIOR_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLNORWICHTERRIOR_MLSHORT
+#define MLTK_MLINT         MLNORWICHTERRIOR_MLINT
+#define MLTK_MLLONG        MLNORWICHTERRIOR_MLLONG
+#define MLTK_MLINT64       MLNORWICHTERRIOR_MLINT64
+#define MLTK_MLFLOAT       MLNORWICHTERRIOR_MLFLOAT
+#define MLTK_MLDOUBLE      MLNORWICHTERRIOR_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLNORWICHTERRIOR_MLLONGDOUBLE
+
+#elif __SVR4 || __svr4__
+#include <sys/types.h>
+
+#if defined(_ILP32)
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLSAINTBERNARD_NUMERICS_ID
+
+#define MLTK_CSHORT        MLSAINTBERNARD_CSHORT
+#define MLTK_CINT          MLSAINTBERNARD_CINT
+#define MLTK_CLONG         MLSAINTBERNARD_CLONG
+#define MLTK_CINT64        MLSAINTBERNARD_CINT64
+#define MLTK_CFLOAT        MLSAINTBERNARD_CFLOAT
+#define MLTK_CDOUBLE       MLSAINTBERNARD_CDOUBLE
+#define MLTK_CLONGDOULBE   MLSAINTBERNARD_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLSAINTBERNARD_MLSHORT
+#define MLTK_MLINT         MLSAINTBERNARD_MLINT
+#define MLTK_MLLONG        MLSAINTBERNARD_MLLONG
+#define MLTK_MLINT64       MLSAINTBERNARD_MLINT64
+#define MLTK_MLFLOAT       MLSAINTBERNARD_MLFLOAT
+#define MLTK_MLDOUBLE      MLSAINTBERNARD_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLSAINTBERNARD_MLLONGDOUBLE
+
+#elif defined(_LP64)
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLBERNESEMOUNTAINDOG_NUMERICS_ID
+
+#define MLTK_CSHORT        MLBERNESEMOUNTAINDOG_CSHORT
+#define MLTK_CINT          MLBERNESEMOUNTAINDOG_CINT
+#define MLTK_CLONG         MLBERNESEMOUNTAINDOG_CLONG
+#define MLTK_CINT64        MLBERNESEMOUNTAINDOG_CINT64
+#define MLTK_CFLOAT        MLBERNESEMOUNTAINDOG_CFLOAT
+#define MLTK_CDOUBLE       MLBERNESEMOUNTAINDOG_CDOUBLE
+#define MLTK_CLONGDOULBE   MLBERNESEMOUNTAINDOG_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLBERNESEMOUNTAINDOG_MLSHORT
+#define MLTK_MLINT         MLBERNESEMOUNTAINDOG_MLINT
+#define MLTK_MLLONG        MLBERNESEMOUNTAINDOG_MLLONG
+#define MLTK_MLINT64       MLBERNESEMOUNTAINDOG_MLINT64
+#define MLTK_MLFLOAT       MLBERNESEMOUNTAINDOG_MLFLOAT
+#define MLTK_MLDOUBLE      MLBERNESEMOUNTAINDOG_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLBERNESEMOUNTAINDOG_MLLONGDOUBLE
+
+#endif /* _ILP32 || _LP64 */
 
 #else
-#	define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLOLD_WIN_ENV_NUMERICS_ID
+/* syntax error */ )
+#endif
 
-#	define MLTK_CSHORT        MLOLD_WIN_ENV_CSHORT
-#	define MLTK_CINT          MLOLD_WIN_ENV_CINT
-#	define MLTK_CLONG         MLOLD_WIN_ENV_CLONG
-#	define MLTK_CINT64        MLOLD_WIN_ENV_CINT64
-#	define MLTK_CFLOAT        MLOLD_WIN_ENV_CFLOAT
-#	define MLTK_CDOUBLE       MLOLD_WIN_ENV_CDOUBLE
-#	define MLTK_CLONGDOUBLE   MLOLD_WIN_ENV_CLONGDOUBLE
+#elif (WIN32_MATHLINK || WIN64_MATHLINK) && NEW_WIN32_NUMENV
+#if WIN32_MATHLINK
+#if MLINTERFACE < 3
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLSETTER_NUMERICS_ID
 
-#	define MLTK_MLSHORT       MLOLD_WIN_ENV_MLSHORT
-#	define MLTK_MLINT         MLOLD_WIN_ENV_MLINT
-#	define MLTK_MLLONG        MLOLD_WIN_ENV_MLLONG
-#	define MLTK_MLINT64       MLOLD_WIN_ENV_MLINT64
-#	define MLTK_MLFLOAT       MLOLD_WIN_ENV_MLFLOAT
-#	define MLTK_MLDOUBLE      MLOLD_WIN_ENV_MLDOUBLE
-#	define MLTK_MLLONGDOUBLE  MLOLD_WIN_ENV_MLLONGDOUBLE
+#define MLTK_CSHORT        MLSETTER_CSHORT
+#define MLTK_CINT          MLSETTER_CINT
+#define MLTK_CLONG         MLSETTER_CLONG
+#define MLTK_CINT64        MLSETTER_CINT64
+#define MLTK_CFLOAT        MLSETTER_CFLOAT
+#define MLTK_CDOUBLE       MLSETTER_CDOUBLE
+#define MLTK_CLONGDOULBE   MLSETTER_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLSETTER_MLSHORT
+#define MLTK_MLINT         MLSETTER_MLINT
+#define MLTK_MLLONG        MLSETTER_MLLONG
+#define MLTK_MLINT64       MLSETTER_MLINT64
+#define MLTK_MLFLOAT       MLSETTER_MLFLOAT
+#define MLTK_MLDOUBLE      MLSETTER_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLSETTER_MLLONGDOUBLE
+#else /* MLINTERFACE >= 3 */
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLFRENCH_BULLDOG_NUMERICS_ID
+
+#define MLTK_CSHORT        MLFRENCH_BULLDOG_CSHORT
+#define MLTK_CINT          MLFRENCH_BULLDOG_CINT
+#define MLTK_CLONG         MLFRENCH_BULLDOG_CLONG
+#define MLTK_CINT64        MLFRENCH_BULLDOG_CINT64
+#define MLTK_CFLOAT        MLFRENCH_BULLDOG_CFLOAT
+#define MLTK_CDOUBLE       MLFRENCH_BULLDOG_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLFRENCH_BULLDOG_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLFRENCH_BULLDOG_MLSHORT
+#define MLTK_MLINT         MLFRENCH_BULLDOG_MLINT
+#define MLTK_MLLONG        MLFRENCH_BULLDOG_MLLONG
+#define MLTK_MLINT64       MLFRENCH_BULLDOG_MLINT64
+#define MLTK_MLFLOAT       MLFRENCH_BULLDOG_MLFLOAT
+#define MLTK_MLDOUBLE      MLFRENCH_BULLDOG_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLFRENCH_BULLDOG_MLLONGDOUBLE
+#endif /* MLINTERFACE < 3 */
+#elif WIN64_MATHLINK
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLBICHON_FRISE_NUMERICS_ID
+
+#define MLTK_CSHORT        MLBICHON_FRISE_CSHORT
+#define MLTK_CINT          MLBICHON_FRISE_CINT
+#define MLTK_CLONG         MLBICHON_FRISE_CLONG
+#define MLTK_CINT64        MLBICHON_FRISE_CINT64
+#define MLTK_CFLOAT        MLBICHON_FRISE_CFLOAT
+#define MLTK_CDOUBLE       MLBICHON_FRISE_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLBICHON_FRISE_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLBICHON_FRISE_MLSHORT
+#define MLTK_MLINT         MLBICHON_FRISE_MLINT
+#define MLTK_MLLONG        MLBICHON_FRISE_MLLONG
+#define MLTK_MLINT64       MLBICHON_FRISE_MLINT64
+#define MLTK_MLFLOAT       MLBICHON_FRISE_MLFLOAT
+#define MLTK_MLDOUBLE      MLBICHON_FRISE_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLBICHON_FRISE_MLLONGDOUBLE
+#endif /* WIN32_MATHLINK || WIN64_MATHLINK */
+
+#elif ALPHA_WIN32_MATHLINK
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLHELEN_NUMERICS_ID
+
+#define MLTK_CSHORT        MLHELEN_CSHORT
+#define MLTK_CINT          MLHELEN_CINT
+#define MLTK_CLONG         MLHELEN_CLONG
+#define MLTK_CINT64        MLHELEN_CINT64
+#define MLTK_CFLOAT        MLHELEN_CFLOAT
+#define MLTK_CDOUBLE       MLHELEN_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLHELEN_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLHELEN_MLSHORT
+#define MLTK_MLINT         MLHELEN_MLINT
+#define MLTK_MLLONG        MLHELEN_MLLONG
+#define MLTK_MLINT64       MLHELEN_MLINT64
+#define MLTK_MLFLOAT       MLHELEN_MLFLOAT
+#define MLTK_MLDOUBLE      MLHELEN_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLHELEN_MLLONGDOUBLE
+
+#elif DARWIN_MATHLINK
+#if PPC_DARWIN_MATHLINK
+		/* We must use a different numerics env if we are built with gcc 3.3 or earlier. */
+#if GCC_MATHLINK_VERSION <= 30300
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLBEAGLE_NUMERICS_ID
+
+#define MLTK_CSHORT        MLBEAGLE_CSHORT
+#define MLTK_CINT          MLBEAGLE_CINT
+#define MLTK_CLONG         MLBEAGLE_CLONG
+#define MLTK_CINT64        MLBEAGLE_CINT64
+#define MLTK_CFLOAT        MLBEAGLE_CFLOAT
+#define MLTK_CDOUBLE       MLBEAGLE_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLBEAGLE_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLBEAGLE_MLSHORT
+#define MLTK_MLINT         MLBEAGLE_MLINT
+#define MLTK_MLLONG        MLBEAGLE_MLLONG
+#define MLTK_MLINT64       MLBEAGLE_MLINT64
+#define MLTK_MLFLOAT       MLBEAGLE_MLFLOAT
+#define MLTK_MLDOUBLE      MLBEAGLE_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLBEAGLE_MLLONGDOUBLE
+
+#else
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLBULLTERRIER_NUMERICS_ID
+
+#define MLTK_CSHORT        MLBULLTERRIER_CSHORT
+#define MLTK_CINT          MLBULLTERRIER_CINT
+#define MLTK_CLONG         MLBULLTERRIER_CLONG
+#define MLTK_CINT64        MLBULLTERRIER_CINT64
+#define MLTK_CFLOAT        MLBULLTERRIER_CFLOAT
+#define MLTK_CDOUBLE       MLBULLTERRIER_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLBULLTERRIER_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLBULLTERRIER_MLSHORT
+#define MLTK_MLINT         MLBULLTERRIER_MLINT
+#define MLTK_MLLONG        MLBULLTERRIER_MLLONG
+#define MLTK_MLINT64       MLBULLTERRIER_MLINT64
+#define MLTK_MLFLOAT       MLBULLTERRIER_MLFLOAT
+#define MLTK_MLDOUBLE      MLBULLTERRIER_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLBULLTERRIER_MLLONGDOUBLE
+
+#endif /* GCC_MATHLINK_VERSION > 30300 */
+
+#elif PPC64_DARWIN_MATHLINK
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLBORDERTERRIER_NUMERICS_ID
+
+#define MLTK_CSHORT        MLBORDERTERRIER_CSHORT
+#define MLTK_CINT          MLBORDERTERRIER_CINT
+#define MLTK_CLONG         MLBORDERTERRIER_CLONG
+#define MLTK_CINT64        MLBORDERTERRIER_CINT64
+#define MLTK_CFLOAT        MLBORDERTERRIER_CFLOAT
+#define MLTK_CDOUBLE       MLBORDERTERRIER_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLBORDERTERRIER_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLBORDERTERRIER_MLSHORT
+#define MLTK_MLINT         MLBORDERTERRIER_MLINT
+#define MLTK_MLLONG        MLBORDERTERRIER_MLLONG
+#define MLTK_MLINT64       MLBORDERTERRIER_MLINT64
+#define MLTK_MLFLOAT       MLBORDERTERRIER_MLFLOAT
+#define MLTK_MLDOUBLE      MLBORDERTERRIER_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLBORDERTERRIER_MLLONGDOUBLE
+
+#elif X86_DARWIN_MATHLINK
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLBASENJI_NUMERICS_ID
+
+#define MLTK_CSHORT        MLBASENJI_CSHORT
+#define MLTK_CINT          MLBASENJI_CINT
+#define MLTK_CLONG         MLBASENJI_CLONG
+#define MLTK_CINT64        MLBASENJI_CINT64
+#define MLTK_CFLOAT        MLBASENJI_CFLOAT
+#define MLTK_CDOUBLE       MLBASENJI_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLBASENJI_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLBASENJI_MLSHORT
+#define MLTK_MLINT         MLBASENJI_MLINT
+#define MLTK_MLLONG        MLBASENJI_MLLONG
+#define MLTK_MLINT64       MLBASENJI_MLINT64
+#define MLTK_MLFLOAT       MLBASENJI_MLFLOAT
+#define MLTK_MLDOUBLE      MLBASENJI_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLBASENJI_MLLONGDOUBLE
+
+#elif X86_64_DARWIN_MATHLINK
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLGREATDANE_NUMERICS_ID
+
+#define MLTK_CSHORT        MLGREATDANE_CSHORT
+#define MLTK_CINT          MLGREATDANE_CINT
+#define MLTK_CLONG         MLGREATDANE_CLONG
+#define MLTK_CINT64        MLGREATDANE_CINT64
+#define MLTK_CFLOAT        MLGREATDANE_CFLOAT
+#define MLTK_CDOUBLE       MLGREATDANE_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLGREATDANE_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLGREATDANE_MLSHORT
+#define MLTK_MLINT         MLGREATDANE_MLINT
+#define MLTK_MLLONG        MLGREATDANE_MLLONG
+#define MLTK_MLINT64       MLGREATDANE_MLINT64
+#define MLTK_MLFLOAT       MLGREATDANE_MLFLOAT
+#define MLTK_MLDOUBLE      MLGREATDANE_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLGREATDANE_MLLONGDOUBLE
+
+#elif ARM_DARWIN_MATHLINK
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID MLSHARPEI_NUMERICS_ID
+
+#define MLTK_CSHORT        MLSHARPEI_CSHORT
+#define MLTK_CINT          MLSHARPEI_CINT
+#define MLTK_CLONG         MLSHARPEI_CLONG
+#define MLTK_CINT64        MLSHARPEI_CINT64
+#define MLTK_CFLOAT        MLSHARPEI_CFLOAT
+#define MLTK_CDOUBLE       MLSHARPEI_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLSHARPEI_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLSHARPEI_MLSHORT
+#define MLTK_MLINT         MLSHARPEI_MLINT
+#define MLTK_MLLONG        MLSHARPEI_MLLONG
+#define MLTK_MLINT64       MLSHARPEI_MLINT64
+#define MLTK_MLFLOAT       MLSHARPEI_MLFLOAT
+#define MLTK_MLDOUBLE      MLSHARPEI_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLSHARPEI_MLLONGDOUBLE
+#endif
+
+#elif I86_LINUX_MATHLINK
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLREDDOG_NUMERICS_ID
+
+#define MLTK_CSHORT        MLREDDOG_CSHORT
+#define MLTK_CINT          MLREDDOG_CINT
+#define MLTK_CLONG         MLREDDOG_CLONG
+#define MLTK_CINT64        MLREDDOG_CINT64
+#define MLTK_CFLOAT        MLREDDOG_CFLOAT
+#define MLTK_CDOUBLE       MLREDDOG_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLREDDOG_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLREDDOG_MLSHORT
+#define MLTK_MLINT         MLREDDOG_MLINT
+#define MLTK_MLLONG        MLREDDOG_MLLONG
+#define MLTK_MLINT64       MLREDDOG_MLINT64
+#define MLTK_MLFLOAT       MLREDDOG_MLFLOAT
+#define MLTK_MLDOUBLE      MLREDDOG_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLREDDOG_MLLONGDOUBLE
+
+#elif IA64_LINUX_MATHLINK
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLAUSTRALIANCATTLEDOG_NUMERICS_ID
+
+#define MLTK_CSHORT        MLAUSTRALIANCATTLEDOG_CSHORT
+#define MLTK_CINT          MLAUSTRALIANCATTLEDOG_CINT
+#define MLTK_CLONG         MLAUSTRALIANCATTLEDOG_CLONG
+#define MLTK_CINT64        MLAUSTRALIANCATTLEDOG_CINT64
+#define MLTK_CFLOAT        MLAUSTRALIANCATTLEDOG_CFLOAT
+#define MLTK_CDOUBLE       MLAUSTRALIANCATTLEDOG_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLAUSTRALIANCATTLEDOG_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLAUSTRALIANCATTLEDOG_MLSHORT
+#define MLTK_MLINT         MLAUSTRALIANCATTLEDOG_MLINT
+#define MLTK_MLLONG        MLAUSTRALIANCATTLEDOG_MLLONG
+#define MLTK_MLINT64       MLAUSTRALIANCATTLEDOG_MLINT64
+#define MLTK_MLFLOAT       MLAUSTRALIANCATTLEDOG_MLFLOAT
+#define MLTK_MLDOUBLE      MLAUSTRALIANCATTLEDOG_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLAUSTRALIANCATTLEDOG_MLLONGDOUBLE
+
+#elif X86_64_LINUX_MATHLINK
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLBOXER_NUMERICS_ID
+
+#define MLTK_CSHORT        MLBOXER_CSHORT
+#define MLTK_CINT          MLBOXER_CINT
+#define MLTK_CLONG         MLBOXER_CLONG
+#define MLTK_CINT64        MLBOXER_CINT64
+#define MLTK_CFLOAT        MLBOXER_CFLOAT
+#define MLTK_CDOUBLE       MLBOXER_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLBOXER_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLBOXER_MLSHORT
+#define MLTK_MLINT         MLBOXER_MLINT
+#define MLTK_MLLONG        MLBOXER_MLLONG
+#define MLTK_MLINT64       MLBOXER_MLINT64
+#define MLTK_MLFLOAT       MLBOXER_MLFLOAT
+#define MLTK_MLDOUBLE      MLBOXER_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLBOXER_MLLONGDOUBLE
+
+#elif AXP_LINUX_MATHLINK
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLAKITAINU_NUMERICS_ID
+
+#define MLTK_CSHORT        MLAKITAINU_CSHORT
+#define MLTK_CINT          MLAKITAINU_CINT
+#define MLTK_CLONG         MLAKITAINU_CLONG
+#define MLTK_CINT64        MLAKITAINU_CINT64
+#define MLTK_CFLOAT        MLAKITAINU_CFLOAT
+#define MLTK_CDOUBLE       MLAKITAINU_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLAKITAINU_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLAKITAINU_MLSHORT
+#define MLTK_MLINT         MLAKITAINU_MLINT
+#define MLTK_MLLONG        MLAKITAINU_MLLONG
+#define MLTK_MLINT64       MLAKITAINU_MLINT64
+#define MLTK_MLFLOAT       MLAKITAINU_MLFLOAT
+#define MLTK_MLDOUBLE      MLAKITAINU_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLAKITAINU_MLLONGDOUBLE
+
+#elif ARM_LINUX_MATHLINK
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLCHIHUAHUA_NUMERICS_ID
+
+#define MLTK_CSHORT        MLCHIHUAHUA_CSHORT
+#define MLTK_CINT          MLCHIHUAHUA_CINT
+#define MLTK_CLONG         MLCHIHUAHUA_CLONG
+#define MLTK_CINT64        MLCHIHUAHUA_CINT64
+#define MLTK_CFLOAT        MLCHIHUAHUA_CFLOAT
+#define MLTK_CDOUBLE       MLCHIHUAHUA_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLCHIHUAHUA_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLCHIHUAHUA_MLSHORT
+#define MLTK_MLINT         MLCHIHUAHUA_MLINT
+#define MLTK_MLLONG        MLCHIHUAHUA_MLLONG
+#define MLTK_MLINT64       MLCHIHUAHUA_MLINT64
+#define MLTK_MLFLOAT       MLCHIHUAHUA_MLFLOAT
+#define MLTK_MLDOUBLE      MLCHIHUAHUA_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLCHIHUAHUA_MLLONGDOUBLE
+
+#elif PPC_LINUX_MATHLINK
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLROTTWEILER_NUMERICS_ID
+
+#define MLTK_CSHORT        MLROTTWEILER_CSHORT
+#define MLTK_CINT          MLROTTWEILER_CINT
+#define MLTK_CLONG         MLROTTWEILER_CLONG
+#define MLTK_CINT64        MLROTTWEILER_CINT64
+#define MLTK_CFLOAT        MLROTTWEILER_CFLOAT
+#define MLTK_CDOUBLE       MLROTTWEILER_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLROTTWEILER_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLROTTWEILER_MLSHORT
+#define MLTK_MLINT         MLROTTWEILER_MLINT
+#define MLTK_MLLONG        MLROTTWEILER_MLLONG
+#define MLTK_MLINT64       MLROTTWEILER_MLINT64
+#define MLTK_MLFLOAT       MLROTTWEILER_MLFLOAT
+#define MLTK_MLDOUBLE      MLROTTWEILER_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLROTTWEILER_MLLONGDOUBLE
+
+#elif AIX_MATHLINK
+#if defined(__64BIT__)
+#if defined(MATHLINK_NUMERICS_ENVIRONMENT_ID)
+#undef MATHLINK_NUMERICS_ENVIRONMENT_ID
+#endif
+
+#ifdef __LONGDOUBLE128
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLPHARAOHHOUND_NUMERICS_ID
+
+#define MLTK_CSHORT        MLPHARAOHHOUND_CSHORT
+#define MLTK_CINT          MLPHARAOHHOUND_CINT
+#define MLTK_CLONG         MLPHARAOHHOUND_CLONG
+#define MLTK_CINT64        MLPHARAOHHOUND_CINT64
+#define MLTK_CFLOAT        MLPHARAOHHOUND_CFLOAT
+#define MLTK_CDOUBLE       MLPHARAOHHOUND_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLPHARAOHHOUND_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLPHARAOHHOUND_MLSHORT
+#define MLTK_MLINT         MLPHARAOHHOUND_MLINT
+#define MLTK_MLLONG        MLPHARAOHHOUND_MLLONG
+#define MLTK_MLINT64       MLPHARAOHHOUND_MLINT64
+#define MLTK_MLFLOAT       MLPHARAOHHOUND_MLFLOAT
+#define MLTK_MLDOUBLE      MLPHARAOHHOUND_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLPHARAOHHOUND_MLLONGDOUBLE
+#else
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLTROUT_NUMERICS_ID
+
+#define MLTK_CSHORT        MLTROUT_CSHORT
+#define MLTK_CINT          MLTROUT_CINT
+#define MLTK_CLONG         MLTROUT_CLONG
+#define MLTK_CINT64        MLTROUT_CINT64
+#define MLTK_CFLOAT        MLTROUT_CFLOAT
+#define MLTK_CDOUBLE       MLTROUT_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLTROUT_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLTROUT_MLSHORT
+#define MLTK_MLINT         MLTROUT_MLINT
+#define MLTK_MLLONG        MLTROUT_MLLONG
+#define MLTK_MLINT64       MLTROUT_MLINT64
+#define MLTK_MLFLOAT       MLTROUT_MLFLOAT
+#define MLTK_MLDOUBLE      MLTROUT_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLTROUT_MLLONGDOUBLE
+#endif /* __LONGDOUBLE 128 */
+#else
+#if defined(MATHLINK_NUMERICS_ENVIRONMENT_ID)
+#undef MATHLINK_NUMERICS_ENVIRONMENT_ID
+#endif
+
+#ifdef __LONGDOUBLE128
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLPUG_NUMERICS_ID
+
+#define MLTK_CSHORT        MLPUG_CSHORT
+#define MLTK_CINT          MLPUG_CINT
+#define MLTK_CLONG         MLPUG_CLONG
+#define MLTK_CINT64        MLPUG_CINT64
+#define MLTK_CFLOAT        MLPUG_CFLOAT
+#define MLTK_CDOUBLE       MLPUG_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLPUG_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLPUG_MLSHORT
+#define MLTK_MLINT         MLPUG_MLINT
+#define MLTK_MLLONG        MLPUG_MLLONG
+#define MLTK_MLINT64       MLPUG_MLINT64
+#define MLTK_MLFLOAT       MLPUG_MLFLOAT
+#define MLTK_MLDOUBLE      MLPUG_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLPUG_MLLONGDOUBLE
+#else
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLPOINTER_NUMERICS_ID
+
+#define MLTK_CSHORT        MLPOINTER_CSHORT
+#define MLTK_CINT          MLPOINTER_CINT
+#define MLTK_CLONG         MLPOINTER_CLONG
+#define MLTK_CINT64        MLPOINTER_CINT64
+#define MLTK_CFLOAT        MLPOINTER_CFLOAT
+#define MLTK_CDOUBLE       MLPOINTER_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLPOINTER_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLPOINTER_MLSHORT
+#define MLTK_MLINT         MLPOINTER_MLINT
+#define MLTK_MLLONG        MLPOINTER_MLLONG
+#define MLTK_MLINT64       MLPOINTER_MLINT64
+#define MLTK_MLFLOAT       MLPOINTER_MLFLOAT
+#define MLTK_MLDOUBLE      MLPOINTER_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLPOINTER_MLLONGDOUBLE
+#endif /* __LONGDOUBLE128 */
+#endif /* __64BIT__ */
+
+#elif HPUX_MATHLINK
+#if defined(__LP64__)
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLSAMOYED_NUMERICS_ID
+
+#define MLTK_CSHORT        MLSAMOYED_CSHORT
+#define MLTK_CINT          MLSAMOYED_CINT
+#define MLTK_CLONG         MLSAMOYED_CLONG
+#define MLTK_CINT64        MLSAMOYED_CINT64
+#define MLTK_CFLOAT        MLSAMOYED_CFLOAT
+#define MLTK_CDOUBLE       MLSAMOYED_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLSAMOYED_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLSAMOYED_MLSHORT
+#define MLTK_MLINT         MLSAMOYED_MLINT
+#define MLTK_MLLONG        MLSAMOYED_MLLONG
+#define MLTK_MLINT64       MLSAMOYED_MLINT64
+#define MLTK_MLFLOAT       MLSAMOYED_MLFLOAT
+#define MLTK_MLDOUBLE      MLSAMOYED_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLSAMOYED_MLLONGDOUBLE
+#else
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLSIBERIANHUSKY_NUMERICS_ID
+
+#define MLTK_CSHORT        MLSIBERIANHUSKY_CSHORT
+#define MLTK_CINT          MLSIBERIANHUSKY_CINT
+#define MLTK_CLONG         MLSIBERIANHUSKY_CLONG
+#define MLTK_CINT64        MLSIBERIANHUSKY_CINT64
+#define MLTK_CFLOAT        MLSIBERIANHUSKY_CFLOAT
+#define MLTK_CDOUBLE       MLSIBERIANHUSKY_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLSIBERIANHUSKY_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLSIBERIANHUSKY_MLSHORT
+#define MLTK_MLINT         MLSIBERIANHUSKY_MLINT
+#define MLTK_MLLONG        MLSIBERIANHUSKY_MLLONG
+#define MLTK_MLINT64       MLSIBERIANHUSKY_MLINT64
+#define MLTK_MLFLOAT       MLSIBERIANHUSKY_MLFLOAT
+#define MLTK_MLDOUBLE      MLSIBERIANHUSKY_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLSIBERIANHUSKY_MLLONGDOUBLE
+#endif /* __LP64__ */
+
+#elif DIGITAL_MATHLINK
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLSHIBAINU_NUMERICS_ID
+
+#define MLTK_CSHORT        MLSHIBAINU_CSHORT
+#define MLTK_CINT          MLSHIBAINU_CINT
+#define MLTK_CLONG         MLSHIBAINU_CLONG
+#define MLTK_CINT64        MLSHIBAINU_CINT64
+#define MLTK_CFLOAT        MLSHIBAINU_CFLOAT
+#define MLTK_CDOUBLE       MLSHIBAINU_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLSHIBAINU_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLSHIBAINU_MLSHORT
+#define MLTK_MLINT         MLSHIBAINU_MLINT
+#define MLTK_MLLONG        MLSHIBAINU_MLLONG
+#define MLTK_MLINT64       MLSHIBAINU_MLINT64
+#define MLTK_MLFLOAT       MLSHIBAINU_MLFLOAT
+#define MLTK_MLDOUBLE      MLSHIBAINU_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLSHIBAINU_MLLONGDOUBLE
+
+#elif IRIX_MATHLINK
+#if N32_IRIX_MATHLINK
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLNEWFOUNDLAND_NUMERICS_ID
+
+#define MLTK_CSHORT        MLNEWFOUNDLAND_CSHORT
+#define MLTK_CINT          MLNEWFOUNDLAND_CINT
+#define MLTK_CLONG         MLNEWFOUNDLAND_CLONG
+#define MLTK_CINT64        MLNEWFOUNDLAND_CINT64
+#define MLTK_CFLOAT        MLNEWFOUNDLAND_CFLOAT
+#define MLTK_CDOUBLE       MLNEWFOUNDLAND_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLNEWFOUNDLAND_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLNEWFOUNDLAND_MLSHORT
+#define MLTK_MLINT         MLNEWFOUNDLAND_MLINT
+#define MLTK_MLLONG        MLNEWFOUNDLAND_MLLONG
+#define MLTK_MLINT64       MLNEWFOUNDLAND_MLINT64
+#define MLTK_MLFLOAT       MLNEWFOUNDLAND_MLFLOAT
+#define MLTK_MLDOUBLE      MLNEWFOUNDLAND_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLNEWFOUNDLAND_MLLONGDOUBLE
+#elif M64_IRIX_MATHLINK
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLAFFENPINSCHER_NUMERICS_ID
+
+#define MLTK_CSHORT        MLAFFENPINSCHER_CSHORT
+#define MLTK_CINT          MLAFFENPINSCHER_CINT
+#define MLTK_CLONG         MLAFFENPINSCHER_CLONG
+#define MLTK_CINT64        MLAFFENPINSCHER_CINT64
+#define MLTK_CFLOAT        MLAFFENPINSCHER_CFLOAT
+#define MLTK_CDOUBLE       MLAFFENPINSCHER_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLAFFENPINSCHER_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLAFFENPINSCHER_MLSHORT
+#define MLTK_MLINT         MLAFFENPINSCHER_MLINT
+#define MLTK_MLLONG        MLAFFENPINSCHER_MLLONG
+#define MLTK_MLINT64       MLAFFENPINSCHER_MLINT64
+#define MLTK_MLFLOAT       MLAFFENPINSCHER_MLFLOAT
+#define MLTK_MLDOUBLE      MLAFFENPINSCHER_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLAFFENPINSCHER_MLLONGDOUBLE
+#endif
+
+#else
+#define MATHLINK_NUMERICS_ENVIRONMENT_ID  MLOLD_WIN_ENV_NUMERICS_ID
+
+#define MLTK_CSHORT        MLOLD_WIN_ENV_CSHORT
+#define MLTK_CINT          MLOLD_WIN_ENV_CINT
+#define MLTK_CLONG         MLOLD_WIN_ENV_CLONG
+#define MLTK_CINT64        MLOLD_WIN_ENV_CINT64
+#define MLTK_CFLOAT        MLOLD_WIN_ENV_CFLOAT
+#define MLTK_CDOUBLE       MLOLD_WIN_ENV_CDOUBLE
+#define MLTK_CLONGDOUBLE   MLOLD_WIN_ENV_CLONGDOUBLE
+
+#define MLTK_MLSHORT       MLOLD_WIN_ENV_MLSHORT
+#define MLTK_MLINT         MLOLD_WIN_ENV_MLINT
+#define MLTK_MLLONG        MLOLD_WIN_ENV_MLLONG
+#define MLTK_MLINT64       MLOLD_WIN_ENV_MLINT64
+#define MLTK_MLFLOAT       MLOLD_WIN_ENV_MLFLOAT
+#define MLTK_MLDOUBLE      MLOLD_WIN_ENV_MLDOUBLE
+#define MLTK_MLLONGDOUBLE  MLOLD_WIN_ENV_MLLONGDOUBLE
 
 #endif
 
@@ -2603,39 +2694,40 @@ typedef double_nt    FAR * doublep_nt;
 typedef doublep_nt   FAR * doublepp_nt;
 
 #ifndef CC_SUPPORTS_LONG_DOUBLE
-#	if defined( __STDC__) || defined(__cplusplus) || ! UNIX_MATHLINK
-#		define CC_SUPPORTS_LONG_DOUBLE 1
-#	else
-#		define CC_SUPPORTS_LONG_DOUBLE MLPROTOTYPES
-#	endif
+#if defined( __STDC__) || defined(__cplusplus) || ! UNIX_MATHLINK
+#define CC_SUPPORTS_LONG_DOUBLE 1
+#else
+
+#define CC_SUPPORTS_LONG_DOUBLE MLPROTOTYPES
+#endif
 #endif
 
 struct _i87extended_nt { unsigned short w[5];};
 
 #if CC_SUPPORTS_LONG_DOUBLE
-#	ifndef __extended_nt__
-#		if WINDOWS_MATHLINK && (MLTK_CLONGDOUBLE != MLTK_MLLONGDOUBLE) /* subtle predicate that works for old and new windows numenvs */
-#			define __extended_nt__ struct _i87extended_nt
-#			define EXTENDED_NT_TO_I87_EXTENDED(a,b) a = b
-#			define I87_EXTENDED_TO_EXTENDED_NT(a,b) a = b
-#		else
-#			define __extended_nt__ long double
-#			define EXTENDED_NT_TO_I87_EXTENDED(a,b) \
+#ifndef __extended_nt__
+#if WINDOWS_MATHLINK && (MLTK_CLONGDOUBLE != MLTK_MLLONGDOUBLE) /* subtle predicate that works for old and new windows numenvs */
+#define __extended_nt__ struct _i87extended_nt
+#define EXTENDED_NT_TO_I87_EXTENDED(a,b) a = b
+#define I87_EXTENDED_TO_EXTENDED_NT(a,b) a = b
+#else
+#define __extended_nt__ long double
+#define EXTENDED_NT_TO_I87_EXTENDED(a,b) \
 				{ \
 					int i; \
 					unsigned short *c = (unsigned short *)&b; \
 					for(i = 0; i < 5; i++) a.w[i] = 0; \
 					for(i = 1; i < 5; i++) a.w[i] = *(c + i); \
 				}
-#			define I87_EXTENDED_TO_EXTENDED_NT(a,b) \
+#define I87_EXTENDED_TO_EXTENDED_NT(a,b) \
 				{ \
 					int i; \
 					unsigned short *c = (unsigned short *)&a; \
 					a = 0; \
 					for(i = 1; i < 5; i++) *(c + i) = b.w[i]; \
 				}
-#		endif
-#	endif
+#endif
+#endif
 
 	typedef __extended_nt__    mlextended_double;
 
@@ -2646,8 +2738,12 @@ struct _i87extended_nt { unsigned short w[5];};
 
 #endif /* _MLNTYPES_H */
 
+
+
 #ifndef _ML0TYPES_H
 #define _ML0TYPES_H
+
+
 
 
 #if USING_OLD_TYPE_NAMES
@@ -2679,13 +2775,24 @@ typedef charpp_ct MLBufferArray;
 
 #endif /* _ML0TYPES_H */
 
+
+
+
 ML_EXTERN_C
 
 #ifndef _MLSTDDEV_H
 #define _MLSTDDEV_H
 
 
+
+
+
+
+
+
+
 #if WINDOWS_MATHLINK
+
 #endif
 
 
@@ -2694,6 +2801,7 @@ typedef MLINK dev_cookie;
 
 typedef dev_world FAR * dev_worldp;
 typedef dev_cookie FAR * dev_cookiep;
+
 
 typedef  MLAllocatorUPP dev_allocator;
 #define call_dev_allocator CallMLAllocatorProc
@@ -2764,33 +2872,35 @@ typedef dev_mode FAR * dev_modep;
 
 typedef unsigned long dev_options;
 
-#define _DefaultOptions      ((dev_options)0x00000000)
+#define _DefaultOptions            ((dev_options)0x00000000)
 
-#define _NetworkVisibleMask  ((dev_options)0x00000003)
-#define _BrowseMask          ((dev_options)0x00000010)
-#define _NonBlockingMask     ((dev_options)0x00000020)
-#define _InteractMask        ((dev_options)0x00000100)
-#define _YieldMask           ((dev_options)0x00000200)
-#define _UseIPV6Mask         ((dev_options)0x00010000)
-#define _UseIPV4Mask         ((dev_options)0x00020000)
-#define _VersionMask         ((dev_options)0x0F000000)
+#define _NetworkVisibleMask        ((dev_options)0x00000003)
+#define _BrowseMask                ((dev_options)0x00000010)
+#define _NonBlockingMask           ((dev_options)0x00000020)
+#define _InteractMask              ((dev_options)0x00000100)
+#define _YieldMask                 ((dev_options)0x00000200)
+#define _UseIPV6Mask               ((dev_options)0x00010000)
+#define _UseIPV4Mask               ((dev_options)0x00020000)
+#define _VersionMask               ((dev_options)0x0F000000)
+#define _UseNewTCPIPConnectionMask ((dev_options)0x00100000)
 
-#define _NetworkVisible      ((dev_options)0x00000000)
-#define _LocallyVisible      ((dev_options)0x00000001)
-#define _InternetVisible     ((dev_options)0x00000002)
+#define _NetworkVisible            ((dev_options)0x00000000)
+#define _LocallyVisible            ((dev_options)0x00000001)
+#define _InternetVisible           ((dev_options)0x00000002)
 
-#define _Browse              ((dev_options)0x00000000)
-#define _DontBrowse          ((dev_options)0x00000010)
+#define _Browse                    ((dev_options)0x00000000)
+#define _DontBrowse                ((dev_options)0x00000010)
 
-#define _NonBlocking         ((dev_options)0x00000000)
-#define _Blocking            ((dev_options)0x00000020)
+#define _NonBlocking               ((dev_options)0x00000000)
+#define _Blocking                  ((dev_options)0x00000020)
 
-#define _Interact            ((dev_options)0x00000000)
-#define _DontInteract        ((dev_options)0x00000100)
+#define _Interact                  ((dev_options)0x00000000)
+#define _DontInteract              ((dev_options)0x00000100)
 
-#define _ForceYield          ((dev_options)0x00000200)
-#define _UseIPV6             ((dev_options)0x00010000)
-#define _UseIPV4             ((dev_options)0x00020000)
+#define _ForceYield                ((dev_options)0x00000200)
+#define _UseIPV6                   ((dev_options)0x00010000)
+#define _UseIPV4                   ((dev_options)0x00020000)
+#define _UseNewTCPIPConnection     ((dev_options)0x00100000)
 
 
 #if MLINTERFACE >= 3
@@ -3070,6 +3180,9 @@ ML_END_EXTERN_C
 
 
 
+
+
+
 #ifndef MLSIGNAL_H
 #define MLSIGNAL_H
 
@@ -3087,8 +3200,20 @@ typedef void * MLSignalHandlerObject;
 
 
 
+
+
 #ifndef _MLMAKE_H
 #define _MLMAKE_H
+
+
+
+
+
+
+
+
+
+
 
 /* --binding layer-- */
 /*************** Starting MathLink ***************/
@@ -3128,33 +3253,35 @@ typedef MLUserUPP MLUserFunction;
 
 
 /* edit here and in mldevice.h and mathlink.r */
-#define MLNetworkVisibleMask ((unsigned long)0x00000003)
-#define MLBrowseMask         ((unsigned long)0x00000010)
-#define MLNonBlockingMask    ((unsigned long)0x00000020)
-#define MLInteractMask       ((unsigned long)0x00000100)
-#define MLYieldMask          ((unsigned long)0x00000200)
-#define MLUseIPV6Mask        ((unsigned long)0x00010000)
-#define MLUseIPV4Mask        ((unsigned long)0x00020000)
-#define MLVersionMask        ((unsigned long)0x0000F000)
+#define MLNetworkVisibleMask         ((unsigned long)0x00000003)
+#define MLBrowseMask                 ((unsigned long)0x00000010)
+#define MLNonBlockingMask            ((unsigned long)0x00000020)
+#define MLInteractMask               ((unsigned long)0x00000100)
+#define MLYieldMask                  ((unsigned long)0x00000200)
+#define MLUseIPV6Mask                ((unsigned long)0x00010000)
+#define MLUseIPV4Mask                ((unsigned long)0x00020000)
+#define MLVersionMask                ((unsigned long)0x0000F000)
+#define MLUseNewTCPIPConnectionMask  ((unsigned long)0x00100000)
 
-#define MLDefaultOptions     ((unsigned long)0x00000000)
-#define MLNetworkVisible     ((unsigned long)0x00000000)
-#define MLLocallyVisible     ((unsigned long)0x00000001)
-#define MLInternetVisible    ((unsigned long)0x00000002)
+#define MLDefaultOptions             ((unsigned long)0x00000000)
+#define MLNetworkVisible             ((unsigned long)0x00000000)
+#define MLLocallyVisible             ((unsigned long)0x00000001)
+#define MLInternetVisible            ((unsigned long)0x00000002)
 
-#define MLBrowse             ((unsigned long)0x00000000)
-#define MLDontBrowse         ((unsigned long)0x00000010)
+#define MLBrowse                     ((unsigned long)0x00000000)
+#define MLDontBrowse                 ((unsigned long)0x00000010)
 
-#define MLNonBlocking        ((unsigned long)0x00000000)
-#define MLBlocking           ((unsigned long)0x00000020)
+#define MLNonBlocking                ((unsigned long)0x00000000)
+#define MLBlocking                   ((unsigned long)0x00000020)
 
-#define MLInteract           ((unsigned long)0x00000000)
-#define MLDontInteract       ((unsigned long)0x00000100)
+#define MLInteract                   ((unsigned long)0x00000000)
+#define MLDontInteract               ((unsigned long)0x00000100)
 
-#define MLForceYield         ((unsigned long)0x00000200)
-#define MLUseIPV6            ((unsigned long)0x00010000)
-#define MLUseIPV4            ((unsigned long)0x00020000) 
+#define MLForceYield                 ((unsigned long)0x00000200)
+#define MLUseIPV6                    ((unsigned long)0x00010000)
+#define MLUseIPV4                    ((unsigned long)0x00020000) 
 
+#define MLUseNewTCPIPConnection      ((unsigned long)0x00100000)
 
 /* Encoding types for use with MLSetEncodingParameter */
 #if MLINTERFACE >= 3
@@ -3518,8 +3645,12 @@ MLDECL( mlapi_result,          MLSetDefaultYieldFunction, ( MLEnvironment env, M
 ML_END_EXTERN_C
 
 
+
+
 #ifndef _MLERRORS_H
 #define _MLERRORS_H
+
+
 
 
 /*************** MathLink errors ***************/
@@ -3602,7 +3733,8 @@ ML_END_EXTERN_C
 #define MLEGSCONVERT        49
 #define MLENOTEXE           50
 #define MLESYNCOBJECTMAKE   51
-#define MLELAST MLESYNCOBJECTMAKE
+#define MLEBACKOUT          52
+#define MLELAST MLEBACKOUT
 #else
 #define MLELAST MLELAUNCHNAME /* for internal use only */
 #endif
@@ -3615,6 +3747,8 @@ ML_END_EXTERN_C
 
 
 #endif /* _MLERRNO_H */
+
+
 
 
 #endif /* _MLERRORS_H */
@@ -3634,8 +3768,16 @@ MLDECL( mlapi_result,  MLSetError,     ( MLINK mlp, mlapi_error err));
 ML_END_EXTERN_C
 
 
+
+
 #ifndef _MLYLDMSG_H
 #define _MLYLDMSG_H
+
+
+
+
+
+
 
 
 
@@ -3707,11 +3849,15 @@ MLDECL( mlapi_result, MLDeviceInformation, ( MLINK mlp, devinfo_selector selecto
 #endif /* MLINTERFACE >= 3 */
 ML_END_EXTERN_C
 
+
+
 /*************** Textual interface ***************/
 
 
 #ifndef _MLGET_H
 #define _MLGET_H
+
+
 
 
 #endif /* _MLGET_H */
@@ -3766,8 +3912,14 @@ MLDECL( mlapi_result,   MLFill,             ( MLINK mlp));
 ML_END_EXTERN_C
 
 
+
+
 #ifndef _MLPUT_H
 #define _MLPUT_H
+
+
+
+
 
 
 #define MLPutExpression is obsolete, use MLPutComposite
@@ -3801,6 +3953,8 @@ MLDECL( mlapi_result,   MLFlush,        ( MLINK mlp));
 #endif /* MLINTERFACE >= 3 */
 
 ML_END_EXTERN_C
+
+
 
 
 #ifndef _MLTK_H
@@ -3866,11 +4020,14 @@ typedef unsigned long decoder_mask;
 
 #endif /* _MLTK_H */
 
+
+
 /*************** mlint64 interface ***************/
 
 
 #ifndef _MLINTEGER64_H
 #define _MLINTEGER64_H
+
 
 
 #if MLINTERFACE >= 3
@@ -3917,11 +4074,18 @@ ML_END_EXTERN_C
 
 #endif /* _MLINTEGER64_H */
 
+
+
 /*************** Native C types interface ***************/
 
 
 #ifndef _MLCGET_H
 #define _MLCGET_H
+
+
+
+
+
 
 
 
@@ -4160,8 +4324,15 @@ MLDECL( mlapi_result,   MLCheckFunctionWithArgCount, ( MLINK mlp, kcharp_ct s, l
 ML_END_EXTERN_C
 
 
+
+
 #ifndef _MLCPUT_H
 #define _MLCPUT_H
+
+
+
+
+
 
 
 #if MLINTERFACE < 3
@@ -4331,8 +4502,17 @@ ML_END_EXTERN_C
 
 
 
+
+
 #ifndef _MLSTRING_H
 #define _MLSTRING_H
+
+
+
+
+
+
+
 
 
 
@@ -4505,8 +4685,15 @@ MLDECL( long, MLNextChar,             ( const char **startp, const char *end, in
 ML_END_EXTERN_C
 
 
+
+
 #ifndef _MLCAPUT_H
 #define _MLCAPUT_H
+
+
+
+
+
 
 #ifndef MLINTERFACE
 /* syntax error */ )
@@ -4707,8 +4894,15 @@ MLDECL( mlapi_result, MLPutArrayLeaves0,           ( MLINK mlp, MLINK heads, arr
 ML_END_EXTERN_C
 
 
+
+
 #ifndef _MLCAGET_H
 #define _MLCAGET_H
+
+
+
+
+
 
 #ifndef MLINTERFACE
 /* syntax error */ )
@@ -5003,10 +5197,14 @@ MLDECL( void,           MLDisownLongDoubleArray,   ( MLINK mlp, extendedp_nt dat
 ML_END_EXTERN_C
 
 
+
+
 /*************** seeking, transfering  and synchronization ***************/
 
 #ifndef _MLMARK_H
 #define _MLMARK_H
+
+
 
 
 #endif /* _MLMARK_H */
@@ -5026,8 +5224,13 @@ MLDECL( void,       MLDestroyMark, ( MLINK mlp, MLINKMark mark));
 ML_END_EXTERN_C
 
 
+
+
 #ifndef _MLXFER_H
 #define _MLXFER_H
+
+
+
 
 
 #endif /* _MLXFER_H */
@@ -5061,8 +5264,12 @@ static mlapi_result MLTransfer0 (MLINK dmlp, MLINK smlp, ulong_ct sequence_no);
 ML_END_EXTERN_C
 
 
+
+
 #ifndef _MLSYNC_H
 #define _MLSYNC_H
+
+
 
 
 /* export mls__wait and mls__align(mlsp) */
@@ -5086,6 +5293,8 @@ MLDECL( int, MLAlign,        ( MLINK lmlp, MLINK rmlp));
 MLDECL( mlapi_result, MLAlign,        ( MLINK lmlp, MLINK rmlp));
 #endif /* MLINTERFACE >= 3 */
 ML_END_EXTERN_C
+
+
 
 /*************************************************************/
 
@@ -5139,6 +5348,9 @@ ML_END_EXTERN_C
 
 #endif /* _MLPKTNO_H */
 
+
+
+
 #endif /* _MLPKT_H */
 
 /* explicitly not protected by _MLPKT_H in case MLDECL is redefined for multiple inclusion */
@@ -5152,8 +5364,15 @@ MLDECL( mlapi_packet,  MLNextPacket, ( MLINK mlp));
 ML_END_EXTERN_C
 
 
+
+
 #ifndef _MLALERT_H
 #define _MLALERT_H
+
+
+
+
+
 
 
 ML_EXTERN_C
@@ -5238,6 +5457,8 @@ enum {	MLAlertFunction = 1, MLRequestFunction, MLConfirmFunction,
 
 
 
+
+
 ML_EXTERN_C
 #if MLINTERFACE >= 3
 MLDDECL( mldlg_result, MLAlert_win,   ( MLEnvironment ep, const char *alertstr));
@@ -5258,6 +5479,8 @@ ML_END_EXTERN_C
 #define RIDCANCEL                   104
 
 #endif /* _MLWIN_H */
+
+
 #define MLALERT         MLAlert_win
 #define MLREQUEST       MLRequest_win
 #define MLCONFIRM       MLConfirm_win
@@ -5266,10 +5489,13 @@ ML_END_EXTERN_C
 #endif
 
 #if UNIX_MATHLINK
-#if DARWIN_MATHLINK  && defined (__CONDITIONALMACROS__)
+#if DARWIN_MATHLINK  && ! defined(IOS_MATHLINK) && defined (USE_CF_DIALOGS)
 
 #ifndef _MLDARWIN_H
 #define _MLDARWIN_H
+
+
+
 
 
 ML_EXTERN_C
@@ -5289,15 +5515,20 @@ MLDDECL( mldlg_result, MLDontPermit_darwin, ( MLEnvironment ep, mldlg_result wai
 ML_END_EXTERN_C
 
 #endif /* _MLDARWIN_H */
+
+
 #define MLALERT  	MLAlert_darwin
 #define MLREQUEST	MLRequest_darwin
 #define MLCONFIRM	MLConfirm_darwin
 #define MLPERMIT 	MLPermit_darwin
 #define MLREQUESTARGV	default_request_argv
-#else /* !(DARWIN_MATHLINK && defined (__CONDITIONALMACROS__)) */
+#else /* !(DARWIN_MATHLINK && ! defined(IOS_MATHLINK) && defined (USE_CF_DIALOGS)) */
 
 #ifndef _MLUNIX_H
 #define _MLUNIX_H
+
+
+
 
 
 ML_EXTERN_C
@@ -5316,12 +5547,14 @@ MLDDECL( mldlg_result, MLPermit_unix,  ( MLEnvironment env, mldlg_result wait_fo
 ML_END_EXTERN_C
 
 #endif /* _MLUNIX_H */
+
+
 #define MLALERT  	MLAlert_unix
 #define MLREQUEST	MLRequest_unix
 #define MLCONFIRM	MLConfirm_unix
 #define MLPERMIT 	MLPermit_unix
 #define MLREQUESTARGV	default_request_argv
-#endif /* DARWIN_MATHLINK && defined (__CONDITIONALMACROS__) */
+#endif /* DARWIN_MATHLINK && ! defined(IOS_MATHLINK) && defined (USE_CF_DIALOGS) */
 #endif
 
 
@@ -5365,6 +5598,8 @@ MLDECL( MLDialogProcPtr, MLRequestArgvCast, ( MLRequestArgvProcPtr f));
 MLDECL( MLDialogProcPtr, MLRequestToInteractCast, ( MLRequestToInteractProcPtr f));
 ML_END_EXTERN_C
 
+
+
 /*************************************************************/
 
 
@@ -5381,6 +5616,8 @@ typedef struct _mltimeval{
 
 
 #endif /* _MLTIME_H */
+
+
 
 ML_EXTERN_C
 #if MLINTERFACE >= 3
@@ -5408,11 +5645,15 @@ ML_END_EXTERN_C
 
 #endif /* _MLREADY_H */
 
+
+
 /********************************************************/
 
 
 #ifndef _MLTM_H
 #define _MLTM_H
+
+
 
 
 /*************** Template interface ***************/
@@ -5476,4 +5717,7 @@ ML_END_EXTERN_C
 
 
 
+
+
 #endif /* _MATHLINK_H */
+
