@@ -92,7 +92,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <MinimumRequiredVersion>5.01</MinimumRequiredVersion>
       <AdditionalLibraryDirectories>MathLink;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ml32i2m.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ml32i3m.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -109,7 +109,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <MinimumRequiredVersion>5.01</MinimumRequiredVersion>
       <AdditionalLibraryDirectories>MathLink;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ml64i2m.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ml64i3m.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>C:\Program Files\Wolfram Research\Mathematica\7.0\OSequencer.exe</OutputFile>
     </Link>
   </ItemDefinitionGroup>

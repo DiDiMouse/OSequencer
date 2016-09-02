@@ -11,7 +11,7 @@
 HINSTANCE hInst;								// current instance
 TCHAR szTitle[MAX_LOADSTRING] = "OSequencerConsole";					// The title bar text
 TCHAR szWindowClass[MAX_LOADSTRING] = "OSequencerWin";			// the main window class name
-
+char				g_szErrorMsg[1024];
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
 BOOL				InitInstance(HINSTANCE, int);
@@ -23,6 +23,7 @@ MLENV g_MLEvn = NULL;
 MLINK				g_mlExist = NULL;
 MLINK				g_mlLinkOne = NULL;
 MLINK				g_mlLinkTwo = NULL;
+int					g_nLinkIndex = 0;
 #define EXIST_LINK_ARGC		7
 MLINK	OpenExistingLink(int argcIn, char** argvIn)
 {
@@ -31,21 +32,21 @@ MLINK	OpenExistingLink(int argcIn, char** argvIn)
 	argv[1] = "connect";
 	argv[2] = "-linkname";
 	argv[3] = STR_UNIQUE_LINKNAME;
-	argv[4] = "-linkprotocal";
+	argv[4] = "-linkprotocol";
 	argv[5] = "filemap";
 	argv[6] = 0;
 	int nErr = 0;
-	MLINK pLink = MLOpenArgv(g_MLEvn, argv, &argv[6], &nErr);
+	g_mlExist = MLOpenArgv(g_MLEvn, argv, &argv[6], &nErr);
 	if ( argcIn )
 	{
-		if ( pLink )
+		if ( g_mlExist )
 		{
 			int nCount = argcIn;
-			MLPutFunction(pLink, "List", argcIn);
+			MLPutFunction(g_mlExist, "List", argcIn);
 			if ( argcIn > 0 )
 			{
 				do {
-					MLPutString(pLink, *argvIn);
+					MLPutString(g_mlExist, *argvIn);
 					argvIn++;
 					nCount--;
 				}
@@ -53,24 +54,25 @@ MLINK	OpenExistingLink(int argcIn, char** argvIn)
 			}
 		}
 		ReleaseMutex(hMutex);
-		MLClose(pLink);
+		MLClose(g_mlExist);
 	}
-	return pLink;
+	return g_mlExist;
 }
 MLINK	OpenNewLink(int argcIn, char** argvIn)
 {
-	char FAR*	argv[6];
-	argv[0] = "-linkcreate";
-	argv[1] = "-linkname";
-	argv[2] = STR_UNIQUE_LINKNAME;
-	argv[3] = "-linkprotocal";
-	argv[4] = "filemap";
-	argv[5] = 0;
+	char FAR*	argv[7];
+	argv[0] = "-linkmode";
+	argv[1] = "listen";
+	argv[2] = "-linkname";
+	argv[3] = STR_UNIQUE_LINKNAME;
+	argv[4] = "-linkprotocol";
+	argv[5] = "filemap";
+	argv[6] = 0;
 	int nErr = 0;
-	MLINK pLink = MLOpenArgv(g_MLEvn, argv, &argv[5], &nErr);
+	g_mlExist = MLOpenArgv(g_MLEvn, argv, &argv[6], &nErr);
 	const char* pp = MLErrorString(g_MLEvn, nErr);
 	ReleaseMutex(hMutex);
-	return pLink;
+	return g_mlExist;
 }
 #define MAX_LINK_CACHE	256
 MLINK	g_mlCache[MAX_LINK_CACHE];
@@ -87,6 +89,7 @@ int		CloseLink(MLINK ml)
 		}
 		iCache++;
 	} while (iCache < MAX_LINK_CACHE);
+
 	return nRet;
 }
 MLINK		HandleLink()
@@ -187,31 +190,32 @@ int	TransferPacketRev(MLINK pLink, MLINK ml)
 int	RunLoop(HINSTANCE hInstance, int argc, char** argv)
 {
 	MLEnvironment envLocal = MLInitialize(NULL);
+	MLINK mlLinkCheck = NULL;
+	MLINK mlCacheTwo = NULL;
 	if ( envLocal )
 	{
 		MLMessageHandlerObject msgHandler = MLCreateMessageHandler(envLocal, DefaultMessageHandler, 0);
 
 		MLINK pLink = MLOpenArgv(envLocal, argv, argv + sizeof(char*) * argc, NULL);
+		g_mlLinkOne = pLink;
 		if ( pLink )
 		{
-			g_mlLinkOne = pLink;
 			if ( GetLinkCache(pLink) >= 0 )
 			{
-				int nLinkIndex = 0;
-				MLConnect(pLink);
+				g_nLinkIndex = 0;
+				MLConnect(g_mlLinkOne);
 				if ( msgHandler )
-					MLSetMessageHandler(pLink, msgHandler);
-
+					MLSetMessageHandler(g_mlLinkOne, msgHandler);
+				Sleep(1000);
 				MLINK ml = MLOpenString(envLocal, "-linkmode launch -linkname \'MathKernel -mathlink\'", 0);
-				MLINK mlKeep = ml;
 				g_mlLinkTwo = ml;
 				if ( ml )
 				{
 					MLConnect(ml);
 					if ( msgHandler )
-						MLSetMessageHandler(ml, msgHandler);
+						MLSetMessageHandler(g_mlLinkTwo, msgHandler);
 
-					if ( mlKeep ) //this should be always true, isn't it...
+					if ( g_mlLinkTwo ) //this should be always true, isn't it...
 					{
 						while ( HasLinkCache() > 0 )
 						{
@@ -219,38 +223,38 @@ int	RunLoop(HINSTANCE hInstance, int argc, char** argv)
 							{
 								int mlErr = 0;
 								int mlErrEx = 0;
-								int mlReady = MLReady(pLink);
+								int mlReady = MLReady(g_mlLinkOne);
 								if ( mlReady )
 								{
-									mlErr = MLError(pLink);
+									mlErr = MLError(g_mlLinkOne);
 									if ( !mlErr )
 									{
-										TransferPacket(pLink, mlKeep);
+										TransferPacket(g_mlLinkOne, g_mlLinkTwo);
 									}
 								}
-								int mlReadyEx = MLReady(mlKeep);
+								int mlReadyEx = MLReady(g_mlLinkTwo);
 								if ( mlReadyEx )
 								{
-									mlErrEx = MLError(mlKeep);
+									mlErrEx = MLError(g_mlLinkTwo);
 									if ( !mlErrEx) 
 									{
-										TransferPacketRev(pLink, mlKeep);
+										TransferPacketRev(g_mlLinkOne, g_mlLinkTwo);
 									}
 								}
 								if ( mlErr || mlErrEx )
 									break;
 								if ( !mlReady && !mlReadyEx )
 								{
-									MLFlush(pLink);
-									if ( !MLReady(pLink) )
+									MLFlush(g_mlLinkOne);
+									if ( !MLReady(g_mlLinkOne) )
 									{
-										MLFlush(mlKeep);
-										if ( !MLReady(mlKeep) )
+										MLFlush(g_mlLinkTwo);
+										if ( !MLReady(g_mlLinkTwo) )
 											break;
 									}
 								}
 							}//end of while ( TRUE )
-							if ( !pLink || !g_nTransferFlag && !MLReady(pLink) )
+							if ( !g_mlLinkOne || !g_nTransferFlag && !MLReady(g_mlLinkOne) )
 							{
 								int nIndex = 0, iCache = 0;
 								while ( !g_mlCache[iCache] || !MLReady(g_mlCache[iCache]) )
@@ -260,25 +264,25 @@ int	RunLoop(HINSTANCE hInstance, int argc, char** argv)
 									if ( iCache >= MAX_LINK_CACHE )
 										goto LABEL_EXCEED;
 								}
-								pLink = g_mlCache[iCache];
-								nLinkIndex = iCache;
+								g_mlLinkOne = g_mlCache[iCache];
+								g_nLinkIndex = iCache;
 							}
 LABEL_EXCEED:
-							if ( pLink )
+							if ( g_mlLinkOne )
 							{
-								int nErr = MLError(pLink);
+								int nErr = MLError(g_mlLinkOne);
 								if ( nErr == MLECLOSED || nErr == MLEDEAD )
 								{
-									CloseLink(pLink);
-									pLink = NULL;
-									nLinkIndex = 0;
+									CloseLink(g_mlLinkOne);
+									g_mlLinkOne = NULL;
+									g_nLinkIndex = 0;
 								}
 							}
-							int nErr = MLError(ml);
+							int nErr = MLError(g_mlLinkTwo);
 							if ( nErr == MLECLOSED || nErr == MLEDEAD )
 							{
-								CloseLink(ml);
-								ml = NULL;
+								MLClose(g_mlLinkTwo);
+								g_mlLinkTwo = NULL;
 							}
 							MLINK mlRet = HandleLink();
 							if ( mlRet )
@@ -306,12 +310,14 @@ LABEL_EXCEED:
 								DispatchMessage(&msg);
 							}
 							Sleep(10);
-							if ( !ml )
+							mlCacheTwo = g_mlLinkTwo;
+							if ( !g_mlLinkTwo )
 								goto LABEL_CLOSE;
 						}
+						mlCacheTwo = g_mlLinkTwo;
 LABEL_CLOSE:
-						if ( ml )
-							MLClose(ml);
+						if ( mlCacheTwo )
+							MLClose(mlCacheTwo);
 					}
 					//v10 == v33 ?
 				}
@@ -343,10 +349,9 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	char FAR*	buff_start = buff;
 	char FAR*	argv[32];
 	char FAR**	argv_end = argv + 32;
-	//MessageBox(NULL, "CC", "DD", MB_OK); //use this to stop/attach/debug
-	MLEnvironment env = MLInitialize(NULL);
-	g_MLEvn = env;
-	MLScanString(argv, &argv_end, &lpCmdLine, &buff_start);
+	//MessageBox(NULL, "Sophy stops the process from executing", "Waiting for you", MB_OK); //use this to stop/attach/debug
+	g_MLEvn = MLInitialize(NULL);
+		MLScanString(argv, &argv_end, &lpCmdLine, &buff_start);
 	int nArgCount = (int)(argv_end - argv); //number of arguments.
 	hMutex = CreateMutex(NULL, TRUE, "SeqOLab");
 	if ( hMutex )
@@ -355,18 +360,16 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		if ( GetLastError() == ERROR_ALREADY_EXISTS )
 		{
 			mlink = OpenExistingLink(nArgCount, argv);
-			g_mlExist = mlink;
 		}
 		else
 		{
 			mlink = OpenNewLink(nArgCount, argv);
-			g_mlExist = mlink;
 			if ( mlink )
 			{
 				if ( InitInstance(hInstance, nCmdShow) )
 				{
 					int nRet = RunLoop(hInstance, nArgCount, argv);
-					MLDeinitialize(env);
+					MLDeinitialize(g_MLEvn);
 					return nRet;
 				}
 			}
