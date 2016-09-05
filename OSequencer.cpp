@@ -2,6 +2,7 @@
 //
 
 #include "stdafx.h"
+#include <CommDlg.h>
 #include "OSequencer.h"
 #define	MLINTERFACE	3 //I want to use latest interface to interact with Mathematica 7 and later.
 #include "mathlink.h"
@@ -19,7 +20,7 @@ LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 HANDLE hMutex  = NULL;
 MLENV g_MLEvn = NULL;
-#define STR_UNIQUE_LINKNAME	"OSequencer"
+#define STR_UNIQUE_LINKNAME	"OLabSeq"
 MLINK				g_mlExist = NULL;
 MLINK				g_mlLinkOne = NULL;
 MLINK				g_mlLinkTwo = NULL;
@@ -187,6 +188,49 @@ int	TransferPacketRev(MLINK pLink, MLINK ml)
 		g_nTransferFlag = 0;
 	return nRet;
 }
+#define KERNEL_COMMAND_LENGTH	2048
+#define DEFAULT_MATHKERNEL_NAME	"MathKernel"
+#define DEFAULT_CONFIG_FILE		"OMathLinkConfig.ini"
+char	szKernelCommandLine[KERNEL_COMMAND_LENGTH];
+#include <cstdio>
+static	LPCSTR	_get_ini_file()
+{
+	static	char	szIniFile[KERNEL_COMMAND_LENGTH];
+	static	bool	bInited = false;
+	if ( !bInited )
+	{
+		char	szPath[KERNEL_COMMAND_LENGTH];
+		GetTempPathA(KERNEL_COMMAND_LENGTH, szPath);
+		sprintf_s(szIniFile, KERNEL_COMMAND_LENGTH, "%s%s", szPath, DEFAULT_CONFIG_FILE);
+		bInited = true;
+	}
+	return szIniFile;
+}
+#define CONFIG_FILENAME	_get_ini_file()
+static	int	_init_command_line(char* lpCommandLineBuffer, int nBufferSize)
+{
+#define MAX_KERNELNAME_LENGTH	1024
+	char	szKernelName[MAX_KERNELNAME_LENGTH];
+	GetPrivateProfileStringA("MathKernelExecutable", "Location", DEFAULT_MATHKERNEL_NAME, szKernelName, MAX_KERNELNAME_LENGTH, CONFIG_FILENAME);
+	if ( lstrcmpiA(szKernelName, DEFAULT_MATHKERNEL_NAME) == 0 ) //default, not configured, need to ask user for the mathkernel.exe position
+	{
+		OPENFILENAMEA ofn = {0};
+		ofn.lStructSize = sizeof(OPENFILENAMEA);
+		ofn.hwndOwner = NULL;
+		ofn.lpstrFile = szKernelName;
+		ofn.nMaxFile = MAX_KERNELNAME_LENGTH;
+		ofn.lpstrFilter = "Executable Files(*.exe)\0*.exe\0\0";
+		ofn.Flags = OFN_EXPLORER;
+		ofn.lpstrTitle = "Choose a MathLink program to launch";
+		ofn.nFilterIndex = 1;
+		if ( GetOpenFileNameA(&ofn) )
+		{
+			WritePrivateProfileStringA("MathKernelExecutable", "Location", szKernelName, CONFIG_FILENAME);
+		}
+	}
+	sprintf_s(lpCommandLineBuffer, nBufferSize, "-linkmode launch -linkname \'%s -mathlink\'", szKernelName);
+	return 0;
+}
 int	RunLoop(HINSTANCE hInstance, int argc, char** argv)
 {
 	MLEnvironment envLocal = MLInitialize(NULL);
@@ -207,7 +251,11 @@ int	RunLoop(HINSTANCE hInstance, int argc, char** argv)
 				if ( msgHandler )
 					MLSetMessageHandler(g_mlLinkOne, msgHandler);
 				Sleep(1000);
-				MLINK ml = MLOpenString(envLocal, "-linkmode launch -linkname \'MathKernel -mathlink\'", 0);
+
+				//MLINK ml = MLOpenString(envLocal, "-linkmode launch -linkname \'MathKernel -mathlink\'", 0);
+				_init_command_line(szKernelCommandLine, KERNEL_COMMAND_LENGTH);
+				MLINK ml = MLOpenString(envLocal, szKernelCommandLine, 0);
+				GetCurrentDirectoryA(KERNEL_COMMAND_LENGTH, szKernelCommandLine);
 				g_mlLinkTwo = ml;
 				if ( ml )
 				{
@@ -349,7 +397,9 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	char FAR*	buff_start = buff;
 	char FAR*	argv[32];
 	char FAR**	argv_end = argv + 32;
-	//MessageBox(NULL, "Sophy stops the process from executing", "Waiting for you", MB_OK); //use this to stop/attach/debug
+#ifdef _DEBUG
+	MessageBox(NULL, "Sophy stops the process from executing, independent proxy", "Waiting for you", MB_OK); //use this to stop/attach/debug
+#endif // _DEBUG
 	g_MLEvn = MLInitialize(NULL);
 		MLScanString(argv, &argv_end, &lpCmdLine, &buff_start);
 	int nArgCount = (int)(argv_end - argv); //number of arguments.
